@@ -4,7 +4,10 @@ require './vendor/autoload.php';
 use \Controllers\DbController;
 use \Controllers\AuthController;
 
-DbController::create_connection("localhost", "php_term_project", "root", "Griya_indah49");
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+DbController::create_connection($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASS"]);
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
