@@ -19,11 +19,17 @@ composer install
 npm run tailwind-watch
 ```
 
-### 4. Run the app (using valet)
+### 4. Setup your .env
+Make a copy of the `.env.example` like below. Then start configuring your environment variables.
+```bash
+cp .env.example .env
+```
+
+### 5. Run the app (using valet)
 ```bash
 # using valet
 valet link
 ```
 
-### 4.1 Not using valet
+### 5.1 Not using valet
 - Map your server to host the root folder.
