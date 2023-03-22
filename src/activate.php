@@ -27,7 +27,7 @@ if ($user) {
   echo "Invalid activation token.";
 }
 
-// header("Location: /auth/login");
+header("Location: /auth/login");
 
 
 ?>

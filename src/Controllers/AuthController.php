@@ -15,7 +15,10 @@
 // and a hyperlink to click so that they may login again
 
 
+
 namespace Controllers;
+
+session_start();
 
 use \Controllers\DbController;
 
@@ -41,7 +44,7 @@ class AuthController{
         // if there is a duplicate...
         if ($count > 0) {
             $_SESSION['error'] = 'Username already exists';
-            header("Location: /signup"); // navigate back to the signup page
+            header("Location: /auth/signup?notification=user-exists"); // navigate back to the signup page
             exit;
         }
 
@@ -52,7 +55,7 @@ class AuthController{
 
     public function addUser($username, $password){
 
-        session_start();
+        // session_start();
         $_SESSION['user'] = $username;
 
         // hash the password
@@ -81,20 +84,16 @@ class AuthController{
 
         $headers = 'From: no-reply@example.com';
 
-        echo "$message";
-
         mail($username, $subject, $message, $headers);
-
-
-        // navigate to login
-        header("Location: /auth/login?notification=registered");
-
+        
+        header("Location: /auth/login?notification=email-sent");
+        
     }
 
     public function loginUser(){
 
-        // Check session for user login attempts
-        session_start();
+        // // Check session for user login attempts
+        // session_start();
 
         // get the username and password from the form
         $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL); // validate email format input
@@ -105,22 +104,30 @@ class AuthController{
         $stmt->execute([$username]);
         $user = $stmt->fetch();
 
+        echo "password: " . $password . "<br>";
+        echo "user password: " . $user['password'] . "<br>";
+
         // check if the password is the same as the one in the database
         if (password_verify($password, $user['password'])) {
+
 
             // if the user has not activated their account, redirect to login page
             if ($user['active'] == 0) {
                 header("Location: /auth/login?notification=activation");
                 exit;
             }
+
+            $_SESSION['login_success'] = 1; // this no work
             
             header("Location: /home");
 
         } else {
 
+
             // if the user has failed 3 times, redirect to login page
             if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= 3) {
                 header("Location: /auth/login?notification=locked-out");
+                $this->forgotPassword();
                 exit;
             }
 
@@ -141,14 +148,16 @@ class AuthController{
 
     public function forgotPassword(){
         
-        $username = $_SESSION['user'];
+        $username = $_SESSION['user'] ?? $_POST['username'];
 
         // generate a new password
         $new_password = bin2hex(random_bytes(32));
 
+        $hash_new_password = password_hash($new_password, PASSWORD_DEFAULT);
+
         // save password to database
         $stmt = AuthController::$conn->prepare("UPDATE users SET password = ? WHERE username = ?");
-        $stmt->execute([$new_password, $username]);
+        $stmt->execute([$hash_new_password, $username]);
 
         // send email with a new password
         $subject = 'New password';
@@ -163,13 +172,19 @@ class AuthController{
             http://$_SERVER[HTTP_HOST]/auth/login
             -----------------
         ";
-        $headers = "no-reply@example.com";
+        $headers = "From: no-reply@example.com";
 
         mail($username, $subject, $message, $headers);
 
         header("Location: /auth/login?notification=password-reset");
 
 
+    }
+
+    public function logoutUser(){
+        session_start();
+        session_destroy();
+        header("Location: /auth/login");
     }
 
 }

@@ -13,6 +13,24 @@
 
     <main class="h-screen w-screen flex flex-col items-center justify-center bg-[#6B705C] font-mono">
 
+        <?php
+
+        // check for query errors
+
+        $notification = $_GET['notification'] ?? null;
+
+        if ($notification) {
+
+            $notification_message = '';
+            switch ($notification) {
+                case 'user-exists':
+                    $notification_message = 'This email is already registered. Please log in.';
+                    break;
+            }
+
+            echo "<p class='text-sm mb-4' style='color:#FFE8D6;'>💡 $notification_message 💡</p>";
+        } ?>
+
         <h1 class="text-[#F8F6F2] text-2xl mb-8"> Sign Up</h1>
         <!-- <h2 class="text-[#A5A58D] text-sm mb-8 text-center"> Callista Stefanie Taswin & Ilia Abedianamiri</h2> -->
         <div class="w-full max-w-xs">
@@ -27,7 +45,7 @@
                     <label class="block text-[#F8F6F2] text-sm font-bold mb-2" for="password">
                         Password
                     </label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-[#6B705C] leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password" maxlength="8" required>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-[#6B705C] leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="text" placeholder="Password" required>
                 </div>
                 <div class="flex items-center justify-between">
                     <button class="bg-[#6B705C] hover:bg-[#A5A58D] text-[#F8F6F2] font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
@@ -37,7 +55,7 @@
             </form>
         </div>
         <a class="text-[#A5A58D] hover:text-[#B7B7A4]" href="/auth/login">
-                Already have an account? Log in
+            Already have an account? Log in
         </a>
 
     </main>

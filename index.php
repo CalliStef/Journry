@@ -14,12 +14,22 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $dbController = new DbController();
     $authController = new AuthController();
 
-    $r->addRoute('GET', '/', function(){include './src/Views/signup.view.php'; });
+    $r->addRoute('GET', '/', function(){
+        header('Location: /auth/signup');
+    });
     $r->addRoute('GET', '/auth/signup', function(){ include './src/Views/signup.view.php'; });
     $r->addRoute('POST', '/auth/signup',[$authController, 'registerUser']);
     $r->addRoute('GET', '/auth/login', function(){ include './src/Views/login.view.php'; });
     $r->addRoute('POST', '/auth/login', [$authController, 'loginUser']);
-    $r->addRoute('GET', '/home', function(){ include './src/Views/home.view.php'; });
+    $r->addRoute('GET', '/auth/forgot-password', function(){ include './src/Views/forgot-password.view.php'; });
+    $r->addRoute('POST', '/auth/forgot-password', [$authController, 'forgotPassword']);
+    $r->addRoute('GET', '/auth/logout', [$authController, 'logoutUser']);
+    $r->addRoute('GET', '/home', function(){ 
+        if(!isset($_SESSION['login_success'])){ 
+            header('Location: /auth/signup'); // keeps going here even though the input is correct
+        }
+        include './src/Views/home.view.php'; 
+    });
 
 });
 
@@ -45,7 +55,6 @@ switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];     
-        // echo "<script>console.log('".json_encode($vars)."')</script>";
         call_user_func($handler, $vars);
         break;
 }

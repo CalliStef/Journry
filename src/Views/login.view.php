@@ -35,7 +35,7 @@
                 case 'password-reset':
                     $notification_message = 'Your password has been reset. Please check your email for the new password.';
                     break;
-                case 'registered':
+                case 'email-sent':
                     $notification_message = 'Your account has been created. Please check your email for the activation link.';
                     break;
             }
@@ -61,13 +61,13 @@
                     <label class="block text-[#F8F6F2] text-sm font-bold mb-2" for="password">
                         Password
                     </label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-[#6B705C] leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password" maxlength="8" required>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-[#6B705C] leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password" required>
                 </div>
                 <div class="flex items-center justify-between">
                     <button class="bg-[#6B705C] hover:bg-[#A5A58D] text-[#F8F6F2] font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                         Log In
                     </button>
-                    <a class="inline-block align-baseline font-bold text-sm text-[#6B705C] hover:text-[#A5A58D]" href="#">
+                    <a class="inline-block align-baseline font-bold text-sm text-[#6B705C] hover:text-[#A5A58D]" href="/auth/forgot-password">
                         Forgot Password?
                     </a>
                 </div>

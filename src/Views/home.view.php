@@ -21,7 +21,7 @@
                 </div>
                 <h2 class="text-[#6B705C] text-base mb-4">Add images</h2>
                 <div class="grid grid-cols-2 gap-4">
-                    
+
                     <label for="image1" class="relative w-full h-36 rounded border-2 border-[#6B705C] flex justify-center items-center cursor-pointer bg-cover bg-center hover:border-gray-600 hover:bg-gray-100">
                         <input type="file" id="image1" name="image1" accept="image/*" class="absolute w-full h-full opacity-0 cursor-pointer">
                         <span class="text-[#6B705C] text-lg font-bold">+</span>
@@ -45,6 +45,10 @@
                 </div>
             </form>
         </div>
+
+        <a class="text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-4" href="/auth/logout">
+            Log out
+        </a>
 
     </main>
 
