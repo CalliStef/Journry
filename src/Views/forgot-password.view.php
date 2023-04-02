@@ -25,7 +25,7 @@
                 </div>
               
                 <div class="flex items-center justify-between">
-                    <button class="bg-[#6B705C] hover:bg-[#A5A58D] text-[#F8F6F2] font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    <button class="transition duration-300 ease-in-out bg-[#6B705C] hover:bg-[#A5A58D] text-[#F8F6F2] font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                         Send Password Reset Email
                     </button>
                 </div>
