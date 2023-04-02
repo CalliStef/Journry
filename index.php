@@ -36,16 +36,20 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         include './src/Views/home.view.php'; 
     });
     $r->addRoute('POST', '/note', [$noteController, 'addNote']);
-    $r->addRoute('GET', '/note/{id:\d+}', function(){
-
-        $journalData = $noteController->getNoteById($id);
+    $r->addRoute('GET', '/note/{id:\d+}', function($id) use ($noteController) {
         $viewData = [
             'method' => 'PUT',
-            'journal' => $noteController->getNoteById($id),
+            'journalData' => $noteController->getNoteById($id['id']),
         ];
-        
+
         include './src/Views/home.view.php';
     });
+    $r->post('/note/update/{id:\d+}', function($id) use ($noteController) {
+        $noteController->updateNote($id['id']);
+    });
+    // $r->addRoute('DELETE', '/note/delete/{id:\d+}', function($id) use ($noteController) {
+    //     $noteController->deleteNoteById($id['id']);
+    // });
 
 });
 

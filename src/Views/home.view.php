@@ -1,7 +1,5 @@
-<!-- <?php
-var_dump($viewData);
 
-?> -->
+
 <!doctype html>
 <html lang="en">
 
@@ -16,41 +14,37 @@ var_dump($viewData);
 <body>
     <main class="h-screen w-screen flex flex-col items-center justify-center bg-[#6B705C] font-mono">
 
-        <h1 class="text-[#F8F6F2] text-2xl mb-4">Write your today's journal</h1>
+        <?=
+        isset($viewData['journalData']) ?
+            "<h1 class='text-[#F8F6F2] text-2xl mb-4'>Update your journal</h1><h2 class='text-sm mb-4' style='color:#FFE8D6;'>Created at: " . ($viewData['journalData']['created_date']) . "</h2>" :
+            "<h1 class='text-[#F8F6F2] text-2xl mb-4'>Write your today's journal</h1>"
+        ?>
 
         <div class="bg-gray-100 p-4 border border-gray-300 font-mono leading-6 w-96 shadow">
-            <form method="<?php echo $viewData['method'] ?>" action="/note" class="p-2 flex flex-col">
+            <form method="POST" action="/note<?= "/update/" . $viewData['journalData']['id'] ?? '' ?>" class="p-2 flex flex-col" enctype="multipart/form-data">
                 <label class="mb-2" for="title">
-                    <input class="w-full h-full bg-transparent outline-none text-center text-xl" type=text name="title" placeholder="Journal Title">
+                    <input class="w-full h-full bg-transparent outline-none text-center text-xl" type="text" name="title" placeholder="Journal Title" value="<?= $viewData["journalData"]["title"] ?? '' ?>">
                 </label>
                 <div class="h-40 overflow-y-scroll">
-                    <textarea class="resize-none w-full h-full bg-transparent outline-none" name="content" placeholder="Enter text here..."></textarea>
+                    <textarea class="resize-none w-full h-full bg-transparent outline-none" name="content" placeholder="Enter text here..."><?= $viewData["journalData"]["content"] ?? '' ?></textarea>
                 </div>
-                <h2 class="text-[#6B705C] text-base mb-4">Add images</h2>
+                <h2 class="text-[#6B705C] text-base mb-4"> <?= isset($viewData['journalData']) ? 'Update ' : 'Save ' ?> Images
+                </h2>
                 <div class="grid grid-cols-2 gap-4">
-                    <label for="image1" class="drop-area overflow-hidden relative w-full h-36 rounded border-2 border-[#6B705C] flex justify-center items-center cursor-pointer bg-cover bg-center hover:border-gray-600 hover:bg-gray-100">
-                        <input type="file" id="image1" name="images[]" accept="image/*" class="absolute w-full h-full opacity-0 cursor-pointer">
-                        <span class="text-[#6B705C] text-lg font-bold">+</span>
-                        <img src="" alt="" class="hidden max-w-full max-h-full">
-                    </label>
-                    <label for="image2" class="drop-area overflow-hidden relative w-full h-36 rounded border-2 border-[#6B705C] flex justify-center items-center cursor-pointer bg-cover bg-center hover:border-gray-600 hover:bg-gray-100">
-                        <input type="file" id="image2" name="images[]" accept="image/*" class="absolute w-full h-full opacity-0 cursor-pointer">
-                        <span class="text-[#6B705C] text-lg font-bold">+</span>
-                        <img src="" alt="" class="hidden max-w-full max-h-full">
-                    </label>
-                    <label for="image3" class="drop-area overflow-hidden relative w-full h-36 rounded border-2 border-[#6B705C] flex justify-center items-center cursor-pointer bg-cover bg-center hover:border-gray-600 hover:bg-gray-100">
-                        <input type="file" id="image3" name="images[]" accept="image/*" class="absolute w-full h-full opacity-0 cursor-pointer">
-                        <span class="text-[#6B705C] text-lg font-bold">+</span>
-                        <img src="" alt="" class="hidden max-w-full max-h-full">
-                    </label>
-                    <label for="image4" class="drop-area overflow-hidden relative w-full h-36 rounded border-2 border-[#6B705C] flex justify-center items-center cursor-pointer bg-cover bg-center hover:border-gray-600 hover:bg-gray-100">
-                        <input type="file" id="image4" name="images[]" accept="image/*" class="absolute w-full h-full opacity-0 cursor-pointer">
-                        <span class="text-[#6B705C] text-lg font-bold">+</span>
-                        <img src="" alt="" class="hidden max-w-full max-h-full">
-                    </label>
+                    <?php
+                    for ($i = 0; $i < 4; $i++) {
+                        echo "
+                                <label for='image$i' class='drop-area overflow-hidden relative w-full h-36 rounded border-2 border-[#6B705C] flex justify-center items-center cursor-pointer bg-cover bg-center hover:border-gray-600 hover:bg-gray-100'>
+                                    <input type='file' id='image$i' name='images[]' accept='image/*' class='absolute w-full h-full opacity-0 cursor-pointer'>
+                                    <span class='text-[#6B705C] text-lg font-bold'>" . (isset($viewData['journalData']['images'][$i]) ? '' : '+')  . " </span>
+                                    <img src='data:image/*;base64," . ($viewData['journalData']['images'][$i]['filename'] ?? '') . "' alt='' class='" . (isset($viewData['journalData']['images'][$i]) ? '' : 'hidden') . "max-w-full max-h-full'>
+                                </label>
+                            ";
+                    }
+                    ?>
                 </div>
                 <button class="text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-4" type="submit">
-                    Save journal
+                    <?= isset($viewData['journalData']) ? 'Update Journal Entry' : 'Save Journal Entry' ?>
                 </button>
             </form>
         </div>
@@ -61,10 +55,7 @@ var_dump($viewData);
 
     </main>
 
-
-</body>
-
-<script>
+    <script>
     // Get all file input elements
     const dropAreas = document.querySelectorAll('.drop-area');
 
@@ -127,5 +118,10 @@ var_dump($viewData);
         })
     });
 </script>
+
+
+</body>
+
+
 
 </html>
