@@ -117,7 +117,8 @@ class AuthController{
                 exit;
             }
 
-            $_SESSION['login_success'] = 1; // this no work
+            $_SESSION['login_success'] = 1;
+            $_SESSION['user'] = $username;
             
             header("Location: /home");
 

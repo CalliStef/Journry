@@ -3,6 +3,7 @@ require './vendor/autoload.php';
 
 use \Controllers\DbController;
 use \Controllers\AuthController;
+use \Controllers\NoteController;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -13,6 +14,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
     $dbController = new DbController();
     $authController = new AuthController();
+    $noteController = new NoteController();
 
     $r->addRoute('GET', '/', function(){
         header('Location: /auth/signup');
@@ -28,7 +30,21 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         if(!isset($_SESSION['login_success'])){ 
             header('Location: /auth/signup'); // keeps going here even though the input is correct
         }
+        $viewData = [
+            'method' => 'POST'
+        ];
         include './src/Views/home.view.php'; 
+    });
+    $r->addRoute('POST', '/note', [$noteController, 'addNote']);
+    $r->addRoute('GET', '/note/{id:\d+}', function(){
+
+        $journalData = $noteController->getNoteById($id);
+        $viewData = [
+            'method' => 'PUT',
+            'journal' => $noteController->getNoteById($id),
+        ];
+        
+        include './src/Views/home.view.php';
     });
 
 });
