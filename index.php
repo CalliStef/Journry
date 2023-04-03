@@ -64,9 +64,13 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         $r->post('/note/update/{id:\d+}', function($id) use ($noteController) {
             $noteController->updateNote($id['id']);
         });
+        $r->addRoute('GET', '/note/delete/{id:\d+}', function($id) use ($noteServices) {
+            $noteServices->deleteNoteById($id['id']);
+        });
         $r->addRoute('GET', '/image/delete/{id:\d+}', function($id) use ($imageServices) {
             $imageServices->deleteImage($id['id']);
         });
+       
     }
    
 

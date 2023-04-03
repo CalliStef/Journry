@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="/dist/output.css" rel="stylesheet">
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <title>Home</title>
 </head>
 
@@ -18,7 +19,8 @@
             ? "<h1 class='text-[#F8F6F2] text-2xl mb-2'>Edit your journal</h1><h2 class='text-sm text-[#DDBEA9] mb-2'>Created at: " . $viewData['journalData']['created_date'] . "</h2>"
             : "<h1 class='text-[#F8F6F2] text-2xl mb-4'>Write your today's journal</h1>"
         ?>
-        <div class="bg-gray-100 p-4 border border-gray-300 font-mono leading-6 w-96 shadow">
+        <div class="relative bg-gray-100 p-4 border border-gray-300 font-mono leading-6 w-96 shadow">
+        <a href="/note/delete/<?= $viewData['journalData']['id']?>" class='icon-button absolute top-0 right-0 translate-x-3 -translate-y-4 w-12 h-12 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-8 h-8' data-icon='ph:trash-fill'></span></a>
             <form method="POST" action="/note<?= isset($viewData['journalData']['id']) ? "/update/" . $viewData['journalData']['id'] : '' ?>" class="p-2 flex flex-col" enctype="multipart/form-data">
                 <label class="mb-2" for="title">
                     <input class="w-full h-full bg-transparent outline-none text-center text-xl" type=text name="title" placeholder="Journal Title" value="<?= $viewData['journalData']['title'] ?? '' ?>">
@@ -34,7 +36,7 @@
                         echo "<label for='image$i' class='drop-area relative w-full h-36 rounded border-2 border-[#6B705C] flex justify-center items-center cursor-pointer bg-cover bg-center hover:border-gray-600 hover:bg-gray-100'>";
                         if(isset($viewData['journalData']['images'][$i])) {
                             echo "<img src='data:image/*;base64," . ($viewData['journalData']['images'][$i]['filename'] ?? '') . "' alt='' class='max-w-full max-h-full'>";
-                            echo "<a href='/image/delete/{$viewData['journalData']['images'][$i]['id']}' class='image-button absolute top-0 right-0 translate-x-3 -translate-y-4 w-8 h-8 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'>x</a>";
+                            echo "<a href='/image/delete/{$viewData['journalData']['images'][$i]['id']}' class='image-button absolute top-0 right-0 translate-x-3 -translate-y-4 w-8 h-8 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-4 h-4' data-icon='ph:trash-fill'></span></a>";
                         } else {
                             echo "<input type='file' id='image$i' name='images[]' accept='image/*' class='absolute w-full h-full opacity-0 cursor-pointer'>
                                     <span class='text-[#6B705C] text-lg font-bold'>+ </span>
