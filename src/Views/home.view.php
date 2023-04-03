@@ -12,7 +12,7 @@
 
 <body>
     <main class="relative h-screen w-screen flex flex-col items-center justify-center bg-[#6B705C] font-mono">
-        <a href='/notes' class="absolute top-4 right-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">JOURNALS >></a>
+        <a href='/notes' class="transition absolute top-4 right-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">JOURNALS >></a>
 
         <?=
             isset($viewData['journalData'])  
@@ -36,7 +36,7 @@
                         echo "<label for='image$i' class='drop-area relative w-full h-36 rounded border-2 border-[#6B705C] flex justify-center items-center cursor-pointer bg-cover bg-center hover:border-gray-600 hover:bg-gray-100'>";
                         if(isset($viewData['journalData']['images'][$i])) {
                             echo "<img src='data:image/*;base64," . ($viewData['journalData']['images'][$i]['filename'] ?? '') . "' alt='' class='max-w-full max-h-full'>";
-                            echo "<a href='/image/delete/{$viewData['journalData']['images'][$i]['id']}' class='image-button absolute top-0 right-0 translate-x-3 -translate-y-4 w-8 h-8 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-4 h-4' data-icon='ph:trash-fill'></span></a>";
+                            echo "<a href='/image/delete/{$viewData['journalData']['images'][$i]['id']}' class='image-button transition absolute top-0 right-0 translate-x-3 -translate-y-4 w-8 h-8 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-4 h-4' data-icon='ph:trash-fill'></span></a>";
                         } else {
                             echo "<input type='file' id='image$i' name='images[]' accept='image/*' class='absolute w-full h-full opacity-0 cursor-pointer'>
                                     <span class='text-[#6B705C] text-lg font-bold'>+ </span>

@@ -69,7 +69,7 @@ class NoteController{
             $user_id = $user_id_stmt->fetchColumn();
 
             // update journal in journals table
-            $update_journal_stmt = NoteController::$conn->prepare("UPDATE journals SET title = ?, content = ?, user_id = ?, created_date = NOW() WHERE id = ?");
+            $update_journal_stmt = NoteController::$conn->prepare("UPDATE journals SET title = ?, content = ?, user_id = ? WHERE id = ?");
             $update_journal_stmt->execute([$title, $content, $user_id, $journal_id]);
 
             // insert images into images table

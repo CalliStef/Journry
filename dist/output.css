@@ -696,6 +696,10 @@ video {
   width: 1rem;
 }
 
+.w-auto {
+  width: auto;
+}
+
 .max-w-full {
   max-width: 100%;
 }
@@ -778,6 +782,14 @@ video {
 
 .overflow-y-scroll {
   overflow-y: scroll;
+}
+
+.whitespace-normal {
+  white-space: normal;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
 }
 
 .rounded {
@@ -1244,5 +1256,15 @@ video {
 
   .lg\:flex-col {
     flex-direction: column;
+  }
+
+  .lg\:whitespace-nowrap {
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:whitespace-nowrap {
+    white-space: nowrap;
   }
 }
