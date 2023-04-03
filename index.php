@@ -49,6 +49,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
             $viewData = [
                 'notes' => $noteServices->getNotes(),
             ];
+
             include './src/Views/notes/notes.view.php'; 
         });
         $r->addRoute('POST', '/note', [$noteController, 'addNote']);

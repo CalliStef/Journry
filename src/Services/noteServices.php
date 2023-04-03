@@ -15,11 +15,29 @@ class NoteServices {
     public function getNotes(){
         $user_email = $_SESSION['user'];
 
-        $get_notes_stmt = NoteServices::$conn->prepare("SELECT journals.id, journals.title, journals.content, journals.created_date, users.username FROM journals INNER JOIN users ON journals.user_id = users.id WHERE users.username = ? ORDER BY journals.created_date DESC");
-        $get_notes_stmt->execute([$user_email]);
-        $notes = $get_notes_stmt->fetchAll();
+        // get user id
+        $user_id_stmt = NoteServices::$conn->prepare("SELECT id FROM users WHERE username = ?");
+        $user_id_stmt->execute([$user_email]);
+        $user_id = $user_id_stmt->fetchColumn();
+
+        // get all journals and reorder them by recent date
+        $get_journals_stmt = NoteServices::$conn->prepare("SELECT * FROM journals WHERE user_id = ? ORDER BY created_date DESC");
+        $get_journals_stmt->execute([$user_id]);
+        $journals = $get_journals_stmt->fetchAll();
+
+        // get the images for each journal
+        foreach($journals as &$journal){
+            $journal_id = $journal['id'];
+            $get_images_stmt = NoteServices::$conn->prepare("SELECT * FROM images WHERE journal_id = ?");
+            $get_images_stmt->execute([$journal_id]);
+            $images = $get_images_stmt->fetchAll();
+            $journal['images'] = $images;
+        }
         
-        return $notes;
+        // Remove the reference to avoid any unintended side effects
+        unset($journal);
+        
+        return $journals;
     }
 
     public function addNote(){
