@@ -17,7 +17,7 @@
 
         <h2 class="lg:flex-col text-5xl font-teko block text-center pb-4 text-[#F8F6F2]">Journals</h2>
 
-        <a href='/note' class="transition mt-4 lg:mt-0 mb-4 top-4 right-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">Create a new journal entry</a>
+        <a href='/note/create' class="transition mt-4 lg:mt-0 mb-4 top-4 right-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">Create a new journal entry</a>
 
         <?php
 

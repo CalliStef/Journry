@@ -12,11 +12,14 @@ class ImageServices{
         ImageServices::$conn = DbController::get_connection();
     }
 
-    public function addImage($image_file, $journal_id){
+    public function addImage($image_files, $journal_id){
         // convert to long blob and store in database
+        $image_file = array_filter($image_files);
         $image_data = base64_encode(file_get_contents($image_file));
         $insert_image_stmt = ImageServices::$conn->prepare("INSERT INTO images (filename, journal_id) VALUES (?, ?)");
         $insert_image_stmt->execute([$image_data, $journal_id]);
+
+        header("Location: /note/$journal_id");
     }
 
     public function getImages($journal_id){
