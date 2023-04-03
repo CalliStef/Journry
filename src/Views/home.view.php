@@ -17,10 +17,10 @@
         <div class="bg-gray-100 p-4 border border-gray-300 font-mono leading-6 w-96 shadow">
             <form method="POST" action="/note<?= isset($viewData['journalData']['id']) ? "/update/" . $viewData['journalData']['id'] : '' ?>" class="p-2 flex flex-col" enctype="multipart/form-data">
                 <label class="mb-2" for="title">
-                    <input class="w-full h-full bg-transparent outline-none text-center text-xl" type=text name="title" placeholder="Journal Title">
+                    <input class="w-full h-full bg-transparent outline-none text-center text-xl" type=text name="title" placeholder="Journal Title" value="<?= $viewData['journalData']['title'] ?? '' ?>">
                 </label>
                 <div class="h-40 overflow-y-scroll">
-                    <textarea class="resize-none w-full h-full bg-transparent outline-none" name="content" placeholder="Enter text here..."></textarea>
+                    <textarea class="resize-none w-full h-full bg-transparent outline-none" name="content" placeholder="Enter text here..."><?= $viewData['journalData']['content'] ?? '' ?></textarea>
                 </div>
                 <h2 class="text-[#6B705C] text-base mb-4">Add images</h2>
                 <div class="grid grid-cols-2 gap-4">
