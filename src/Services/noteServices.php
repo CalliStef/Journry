@@ -12,6 +12,16 @@ class NoteServices {
         NoteServices::$conn = DbController::get_connection();
     }
 
+    public function getNotes(){
+        $user_email = $_SESSION['user'];
+
+        $get_notes_stmt = NoteServices::$conn->prepare("SELECT journals.id, journals.title, journals.content, journals.created_date, users.username FROM journals INNER JOIN users ON journals.user_id = users.id WHERE users.username = ? ORDER BY journals.created_date DESC");
+        $get_notes_stmt->execute([$user_email]);
+        $notes = $get_notes_stmt->fetchAll();
+        
+        return $notes;
+    }
+
     public function addNote(){
         $title = $_POST['title'];
         $content = $_POST['content'];

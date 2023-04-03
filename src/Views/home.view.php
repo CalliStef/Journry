@@ -10,10 +10,14 @@
 </head>
 
 <body>
-    <main class="h-screen w-screen flex flex-col items-center justify-center bg-[#6B705C] font-mono">
+    <main class="relative h-screen w-screen flex flex-col items-center justify-center bg-[#6B705C] font-mono">
+        <a href='/notes' class="absolute top-4 right-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">JOURNALS >></a>
 
-        <h1 class="text-[#F8F6F2] text-2xl mb-4">Write your today's journal</h1>
-
+        <?=
+            isset($viewData['journalData'])  
+            ? "<h1 class='text-[#F8F6F2] text-2xl mb-2'>Edit your journal</h1><h2 class='text-sm text-[#DDBEA9] mb-2'>Created at: " . $viewData['journalData']['created_date'] . "</h2>"
+            : "<h1 class='text-[#F8F6F2] text-2xl mb-4'>Write your today's journal</h1>"
+        ?>
         <div class="bg-gray-100 p-4 border border-gray-300 font-mono leading-6 w-96 shadow">
             <form method="POST" action="/note<?= isset($viewData['journalData']['id']) ? "/update/" . $viewData['journalData']['id'] : '' ?>" class="p-2 flex flex-col" enctype="multipart/form-data">
                 <label class="mb-2" for="title">
@@ -42,7 +46,7 @@
                     ?>
                 </div>
                 <button class="transition duration-200 ease-in-out text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-4" type="submit">
-                    Save journal
+                   <?= isset($viewData['journalData']) ? 'Update' : 'Save' ?> Journal
                 </button>
             </form>
         </div>

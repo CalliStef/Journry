@@ -6,6 +6,7 @@ use \Controllers\AuthController;
 use \Controllers\NoteController;
 
 use \Services\ImageServices;
+use \Services\NoteServices;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -19,42 +20,54 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $noteController = new NoteController();
 
     $imageServices = new ImageServices();
+    $noteServices = new NoteServices();
+
 
     $r->addRoute('GET', '/', function(){
         header('Location: /auth/signup');
     });
-    $r->addRoute('GET', '/auth/signup', function(){ include './src/Views/signup.view.php'; });
+    $r->addRoute('GET', '/auth/signup', function(){ include './src/Views/auths/signup.view.php'; });
     $r->addRoute('POST', '/auth/signup',[$authController, 'registerUser']);
-    $r->addRoute('GET', '/auth/login', function(){ include './src/Views/login.view.php'; });
+    $r->addRoute('GET', '/auth/login', function(){ include './src/Views/auths/login.view.php'; });
     $r->addRoute('POST', '/auth/login', [$authController, 'loginUser']);
-    $r->addRoute('GET', '/auth/forgot-password', function(){ include './src/Views/forgot-password.view.php'; });
+    $r->addRoute('GET', '/auth/forgot-password', function(){ include './src/Views/auths/forgot-password.view.php'; });
     $r->addRoute('POST', '/auth/forgot-password', [$authController, 'forgotPassword']);
     $r->addRoute('GET', '/auth/logout', [$authController, 'logoutUser']);
     $r->addRoute('GET', '/home', function(){ 
         if(!isset($_SESSION['login_success'])){ 
-            header('Location: /auth/signup'); // keeps going here even though the input is correct
+            header('Location: /auth/signup'); 
         }
         $viewData = [
             'method' => 'POST'
         ];
         include './src/Views/home.view.php'; 
     });
-    $r->addRoute('GET', '/notes', function(){ include './src/Views/notes/notes.view.php'; });
-    $r->addRoute('POST', '/note', [$noteController, 'addNote']);
-    $r->addRoute('GET', '/note/{id:\d+}', function($id) use ($noteController) {
-        $viewData = [
-            'method' => 'PUT',
-            'journalData' => $noteController->getNoteById($id['id']),
-        ];
-
-        include './src/Views/home.view.php';
-    });
-    $r->post('/note/update/{id:\d+}', function($id) use ($noteController) {
-        $noteController->updateNote($id['id']);
-    });
-    $r->addRoute('GET', '/image/delete/{id:\d+}', function($id) use ($imageServices) {
-        $imageServices->deleteImage($id['id']);
-    });
+    if(!isset($_SESSION['login_success'])){ 
+        header('Location: /auth/signup'); 
+    } else {
+        $r->addRoute('GET', '/notes', function() use ($noteServices){ 
+            $viewData = [
+                'notes' => $noteServices->getNotes(),
+            ];
+            include './src/Views/notes/notes.view.php'; 
+        });
+        $r->addRoute('POST', '/note', [$noteController, 'addNote']);
+        $r->addRoute('GET', '/note/{id:\d+}', function($id) use ($noteController) {
+            $viewData = [
+                'method' => 'PUT',
+                'journalData' => $noteController->getNoteById($id['id']),
+            ];
+    
+            include './src/Views/home.view.php';
+        });
+        $r->post('/note/update/{id:\d+}', function($id) use ($noteController) {
+            $noteController->updateNote($id['id']);
+        });
+        $r->addRoute('GET', '/image/delete/{id:\d+}', function($id) use ($imageServices) {
+            $imageServices->deleteImage($id['id']);
+        });
+    }
+   
 
 });
 
@@ -83,6 +96,3 @@ switch ($routeInfo[0]) {
         call_user_func($handler, $vars);
         break;
 }
-
-
-?>
