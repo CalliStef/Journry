@@ -3,13 +3,16 @@
 namespace Controllers;
 
 use \Controllers\DbController;
+use \Services\UserServices;
 
 class NoteController{
     
         private static $conn; 
+        private static $user_services;
     
         public function __construct(){
             NoteController::$conn = DbController::get_connection();
+            NoteController::$user_services = new UserServices();
         }
 
         public function addNote(){
@@ -27,10 +30,8 @@ class NoteController{
             // echo var_dump($images);
             
             // get user id
-            $user_id_stmt = NoteController::$conn->prepare("SELECT id FROM users WHERE username = ?");
-            $user_id_stmt->execute([$user_email]);
-            $user_id = $user_id_stmt->fetchColumn();
-
+            $user_id = NoteController::$user_services->getUserIdByEmail($user_email);
+          
             // insert journal into journals table
             $insert_journal_stmt = NoteController::$conn->prepare("INSERT INTO journals (title, content, user_id, created_date) VALUES (?, ?, ?, NOW())");
             $insert_journal_stmt->execute([$title, $content, $user_id]);
@@ -64,9 +65,7 @@ class NoteController{
             }
             
             // get user id
-            $user_id_stmt = NoteController::$conn->prepare("SELECT id FROM users WHERE username = ?");
-            $user_id_stmt->execute([$user_email]);
-            $user_id = $user_id_stmt->fetchColumn();
+            $user_id = NoteController::$user_services->getUserIdByEmail($user_email);
 
             // update journal in journals table
             $update_journal_stmt = NoteController::$conn->prepare("UPDATE journals SET title = ?, content = ?, user_id = ? WHERE id = ?");
@@ -82,31 +81,6 @@ class NoteController{
             header("Location: /note/$journal_id");
 
 
-        }
-
-        public function getNoteById($id){
-            $stmt = NoteController::$conn->prepare("SELECT * FROM journals WHERE id = ?");
-            $stmt->execute([$id]);
-            $journal = $stmt->fetch();
-
-            $images_stmt = NoteController::$conn->prepare("SELECT * FROM images WHERE journal_id = ?");
-            $images_stmt->execute([$id]);
-            $images = $images_stmt->fetchAll();
-
-            $journal['images'] = $images;
-
-            return $journal;
-        }
-
-        public function deleteImage($image_id){
-            $journal_id_stmt = NoteController::$conn->prepare("SELECT journal_id FROM images WHERE id = ?");
-            $journal_id_stmt->execute([$image_id]);
-            $journal_id = $journal_id_stmt->fetchColumn();
-
-            $delete_image_stmt = NoteController::$conn->prepare("DELETE FROM images WHERE id = ?");
-            $delete_image_stmt->execute([$image_id]);
-
-            header("Location: /note/$journal_id");
         }
 
 

@@ -26,7 +26,7 @@ class ImageServices{
         return $images;
     }
 
-    public function deleteImage($image_id){
+    public function deleteImageById($image_id){
         $journal_id_stmt = ImageServices::$conn->prepare("SELECT journal_id FROM images WHERE id = ?");
         $journal_id_stmt->execute([$image_id]);
         $journal_id = $journal_id_stmt->fetchColumn();

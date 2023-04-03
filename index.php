@@ -37,14 +37,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
         if(!isset($_SESSION['login_success'])){ 
             header('Location: /auth/signup'); 
         }
-        $viewData = [
-            'method' => 'POST'
-        ];
         include './src/Views/home.view.php'; 
     });
-    if(!isset($_SESSION['login_success'])){ 
-        header('Location: /auth/signup'); 
-    } else {
+
         $r->addRoute('GET', '/notes', function() use ($noteServices){ 
             $viewData = [
                 'notes' => $noteServices->getNotes(),
@@ -52,11 +47,13 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
 
             include './src/Views/notes/notes.view.php'; 
         });
+        $r->addRoute('GET', '/note', function(){ 
+            include './src/Views/notes/add-note.view.php'; 
+        });
         $r->addRoute('POST', '/note', [$noteController, 'addNote']);
-        $r->addRoute('GET', '/note/{id:\d+}', function($id) use ($noteController) {
+        $r->addRoute('GET', '/note/{id:\d+}', function($id) use ($noteServices) {
             $viewData = [
-                'method' => 'PUT',
-                'journalData' => $noteController->getNoteById($id['id']),
+                'journalData' => $noteServices->getNoteById($id['id']),
             ];
     
             include './src/Views/home.view.php';
@@ -68,10 +65,10 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
             $noteServices->deleteNoteById($id['id']);
         });
         $r->addRoute('GET', '/image/delete/{id:\d+}', function($id) use ($imageServices) {
-            $imageServices->deleteImage($id['id']);
+            $imageServices->deleteImageById($id['id']);
         });
        
-    }
+    
    
 
 });

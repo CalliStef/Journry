@@ -40,7 +40,22 @@ class NoteServices {
         return $journals;
     }
 
+    public function getNoteById($id){
+        $stmt = NoteServices::$conn->prepare("SELECT * FROM journals WHERE id = ?");
+        $stmt->execute([$id]);
+        $journal = $stmt->fetch();
+
+        $images_stmt = NoteServices::$conn->prepare("SELECT * FROM images WHERE journal_id = ?");
+        $images_stmt->execute([$id]);
+        $images = $images_stmt->fetchAll();
+
+        $journal['images'] = $images;
+
+        return $journal;
+    }
+
     public function addNote(){
+        
        
     }
 
@@ -53,7 +68,7 @@ class NoteServices {
         // delete the note and all images associated with it
         $delete_images_stmt = NoteServices::$conn->prepare("DELETE FROM images WHERE journal_id = ?");
         $delete_images_stmt->execute([$note_id]);
-        
+
         $delete_note_stmt = NoteServices::$conn->prepare("DELETE FROM journals WHERE id = ?");
         $delete_note_stmt->execute([$note_id]);
        
