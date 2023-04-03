@@ -5,6 +5,8 @@ use \Controllers\DbController;
 use \Controllers\AuthController;
 use \Controllers\NoteController;
 
+use \Services\ImageServices;
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
@@ -15,6 +17,8 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $dbController = new DbController();
     $authController = new AuthController();
     $noteController = new NoteController();
+
+    $imageServices = new ImageServices();
 
     $r->addRoute('GET', '/', function(){
         header('Location: /auth/signup');
@@ -48,9 +52,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->post('/note/update/{id:\d+}', function($id) use ($noteController) {
         $noteController->updateNote($id['id']);
     });
-    // $r->addRoute('DELETE', '/note/delete/{id:\d+}', function($id) use ($noteController) {
-    //     $noteController->deleteNoteById($id['id']);
-    // });
+    $r->addRoute('GET', '/image/delete/{id:\d+}', function($id) use ($imageServices) {
+        $imageServices->deleteImage($id['id']);
+    });
 
 });
 
