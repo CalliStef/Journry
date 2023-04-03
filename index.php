@@ -48,7 +48,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
             include './src/Views/notes/notes.view.php'; 
         });
         $r->addRoute('GET', '/note', function(){ 
-            include './src/Views/notes/add-note.view.php'; 
+            include './src/Views/notes/note.view.php'; 
         });
         $r->addRoute('POST', '/note', [$noteController, 'addNote']);
         $r->addRoute('GET', '/note/{id:\d+}', function($id) use ($noteServices) {
@@ -56,7 +56,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
                 'journalData' => $noteServices->getNoteById($id['id']),
             ];
     
-            include './src/Views/home.view.php';
+            include './src/Views/notes/note.view.php';
         });
         $r->post('/note/update/{id:\d+}', function($id) use ($noteController) {
             $noteController->updateNote($id['id']);

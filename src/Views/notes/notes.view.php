@@ -15,65 +15,9 @@
 <body class="bg-[#6B705C]">
     <main class="w-screen mt-20 flex flex-col items-center justify-center font-mono">
 
-        <div class="fixed w-screen lg:w-2/12 h-1/12 lg:h-screen bg-[#ddbea9] left-0 top-0 flex flex-col p-4 z-10">
-            <h2 class="lg:flex-col text-5xl font-teko block text-center pb-4">Journals</h2>
-            <div class="flex flex-row lg:flex-col overflow-scroll scrollbar-hide">
-            <?php 
-                $note_months = [];
-                foreach ($viewData['notes'] as $note) {
-                    $full_date = $note['created_date'];
-                    $full_date_arr = explode('-', $full_date);
-                    $month = $full_date_arr[1];
-                    $year = $full_date_arr[0];
-                    if (!isset($note_months[$year])) {
-                        $note_months[$year] = [];
-                    }
-                    if (!isset($note_months[$year][$month])) {
-                        $note_months[$year][$month] = [];
-                    }
-                    $note_months[$year][$month][] = $note;
-                }
-                
-                // Sort the months by year and month
-                krsort($note_months);
+        <h2 class="lg:flex-col text-5xl font-teko block text-center pb-4 text-[#F8F6F2]">Journals</h2>
 
-                foreach ($note_months as $year => $months) {
-                    krsort($months);
-                    foreach ($months as $month => $notes) {
-                        // echo var_dump($month); // 04
-                        $month_name = date('F', strtotime($year . '-' . $month . '-01'));
-
-                        echo "<div class='flex flex-row lg:flex-col items-center justify-center'>";
-                        echo "<h3 class='text-xl text-center pb-3'>" . $month_name . " " . $year . "</h3>";
-                        foreach ($notes as $note) {
-                            $note_date = $note['created_date'];
-                            $note_date_arr = explode('-', $note_date);
-                            $note_day = $note_date_arr[2];
-                            $note_day = ltrim($note_day, '0');
-
-                            $note_day_ordinal = match ($note_day % 10) {
-                                1 => 'st',
-                                2 => 'nd',
-                                3 => 'rd',
-                                default => 'th'
-                            };
-
-                            echo "<div class='bg-[#6b705c] px-6 py-3 flex items-center pt-5 rounded-full mb-3 group hover:bg-white border-[3px] hover:border-solid hover:border-black transition duration-300 ease-in-out cursor-pointer'>";
-                            echo "<span class='font-teko text-3xl text-white group-hover:text-black'>$note_day$note_day_ordinal</span>";
-                            echo "</div>";
-                        }
-                        echo "</div>";
-                    }
-                }
-
-
-                
-                
-            ?>
-            </div>
-        </div>
-
-        <a href='/note' class="transition mt-32 lg:mt-0 mb-4 top-4 right-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">Create a new journal entry</a>
+        <a href='/note' class="transition mt-4 lg:mt-0 mb-4 top-4 right-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">Create a new journal entry</a>
 
         <?php
 
