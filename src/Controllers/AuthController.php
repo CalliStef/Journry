@@ -100,10 +100,16 @@ class AuthController
         // AuthController::$mail->Body = $message;
         // AuthController::$mail->send();
 
-        mail($username, $subject, $message, $headers);
+        if(mail($username, $subject, $message, $headers)) {
+            echo "Email sent";
+        } else {
+            echo "Email sending failed";
+        }
+        // mail($username, $subject, $message, $headers);
 
-
+die();
         header("Location: /auth/login?notification=email-sent");
+        
     }
 
     public function loginUser()
@@ -222,8 +228,13 @@ class AuthController
 
 
 
-        mail($username, $subject, $message, $headers);
+        if(mail($username, $subject, $message, $headers)) {
+            echo "Email sent";
+        } else {
+            echo "Email sending failed";
+        }
 
+die();
 
         header("Location: /auth/login?notification=password-reset");
     }
