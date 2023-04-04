@@ -79,6 +79,14 @@ class AuthController{
 
         $headers = 'no-reply@example.com';
 
+        AuthController::$mail = new PHPMailer;
+        AuthController::$mail-> isSMTP(); # SMTP is enabled now.
+        AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
+        AuthController::$mail->SMTPDebug   = 2;
+        AuthController::$mail-> SMTPAuth = true;
+        // AuthController::$mail->SMTPSecure = 'tls';
+        // AuthController::$mail->Port = 587;
+
         AuthController::$mail->From = $headers;
         AuthController::$mail->FromName = 'no-reply';
         AuthController::$mail->addAddress($username);
@@ -187,7 +195,15 @@ class AuthController{
             http://$_SERVER[HTTP_HOST]/auth/login
             -----------------
         ";
-        $headers = "no-reply@example.com";                        
+        $headers = "no-reply@example.com";  
+        
+        AuthController::$mail = new PHPMailer;
+        AuthController::$mail-> isSMTP(); # SMTP is enabled now.
+        AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
+        AuthController::$mail->SMTPDebug   = 2;
+        AuthController::$mail-> SMTPAuth = true;
+        // AuthController::$mail->SMTPSecure = 'tls';
+        // AuthController::$mail->Port = 587;
 
         AuthController::$mail->From = $headers;
         AuthController::$mail->FromName = 'no-reply';
