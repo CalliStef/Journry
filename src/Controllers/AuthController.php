@@ -6,13 +6,13 @@ require './vendor/autoload.php';
 
 session_start();
 
-require_once '/path/to/PHPMailer/src/PHPMailer.php';
-require_once '/path/to/PHPMailer/src/SMTP.php';
-require_once '/path/to/PHPMailer/src/Exception.php';
+// require_once '/PHPMailer/src/PHPMailer.php';
+// require_once '/path/to/PHPMailer/src/SMTP.php';
+// require_once '/path/to/PHPMailer/src/Exception.php';
 
 use \Controllers\DbController;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use \PHPMailer\PHPMailer\PHPMailer;
+use \PHPMailer\PHPMailer\Exception;
 
 class AuthController{
 
