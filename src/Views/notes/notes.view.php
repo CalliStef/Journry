@@ -12,8 +12,13 @@
     <title>Journals</title>
 </head>
 
-<body class="bg-[#6B705C]">
+<body class="relative bg-[#6B705C]">
+    <a href='/home' class="transition absolute flex gap-1 items-center -top-12 left-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">
+        <span class='iconify text-[#5c4235] w-8 h-8' data-icon='solar:home-bold-duotone'></span>
+        <span class="ml-2 ">Home</span>
+    </a>
     <main class="w-screen mt-20 flex flex-col items-center justify-center font-mono">
+
 
         <h2 class="lg:flex-col text-5xl font-teko block text-center pb-4 text-[#F8F6F2]">Journals</h2>
 

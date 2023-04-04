@@ -22,6 +22,16 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $imageServices = new ImageServices();
     $noteServices = new NoteServices();
 
+    $middleware = function ($handler) {
+        return function ($vars) use ($handler) {
+            if (!isset($_SESSION['login_success'])) {
+                header('Location: /auth/signup');
+                return;
+            }
+            call_user_func($handler, $vars);
+        };
+    };
+
 
     $r->get('/', function () {
         header('Location: /auth/signup');
@@ -41,44 +51,41 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->get('/auth/logout', [$authController, 'logoutUser']);
 
 
-    $r->get('/home', function () {
-        if (!isset($_SESSION['login_success'])) {
-            header('Location: /auth/signup');
-        }
+    $r->get('/home', $middleware(function() {
         include './src/Views/home.view.php';
-    });
+    }));
 
-    $r->get('/notes', function () use ($noteServices) {
+    $r->get('/notes', $middleware(function () use ($noteServices) {
         $viewData = [
             'notes' => $noteServices->getNotes(),
         ];
 
         include './src/Views/notes/notes.view.php';
-    });
-    $r->get('/note/create', function() use ($noteServices) {
+    }));
+    $r->get('/note/create', $middleware(function() use ($noteServices) {
        $noteServices->createNote();
-    });
-    // $r->addRoute('POST', '/note', [$noteController, 'addNote']);
-    $r->get('/note/{id:\d+}', function ($id) use ($noteServices) {
+    }));
+
+    $r->get('/note/{id:\d+}', $middleware(function ($id) use ($noteServices) {
         $viewData = [
             'journalData' => $noteServices->getNoteById($id['id']),
         ];
 
         include './src/Views/notes/note.view.php';
-    });
-    $r->post('/note/update/{id:\d+}', function ($id) use ($noteController) {
+    }));
+    $r->post('/note/update/{id:\d+}', $middleware(function ($id) use ($noteController) {
         $noteController->updateNote($id['id']);
-    });
-    $r->get('/note/delete/{id:\d+}', function ($id) use ($noteServices) {
+    }));
+    $r->get('/note/delete/{id:\d+}', $middleware(function ($id) use ($noteServices) {
         $noteServices->deleteNoteById($id['id']);
-    });
-    $r->get('/image/add/{id:\d+}', function ($id) use ($imageServices) { // param is a journal id
+    }));
+    $r->get('/image/add/{id:\d+}', $middleware(function ($id) use ($imageServices) { // param is a journal id
         
         $imageServices->addImage($_FILES['images'], $id['id']);
-    });
-    $r->get('/image/delete/{id:\d+}', function ($id) use ($imageServices) { // param is an image id
+    }));
+    $r->get('/image/delete/{id:\d+}', $middleware(function ($id) use ($imageServices) { // param is an image id
         $imageServices->deleteImageById($id['id']);
-    });
+    }));
 });
 
 // Fetch method and URI from somewhere

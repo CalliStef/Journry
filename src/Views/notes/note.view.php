@@ -26,6 +26,30 @@
             ? "<h1 class='text-[#F8F6F2] text-2xl mb-2'>Edit your journal</h1><h2 class='text-sm text-[#DDBEA9] mb-2'>Created at: " . $viewData['journalData']['created_date'] . "</h2>"
             : "<h1 class='text-[#F8F6F2] text-2xl mb-4'>Write your today's journal</h1>"
         ?>
+
+        <?php
+
+        // check for query errors
+
+        $notification = $_GET['error-msg'] ?? null;
+
+        if ($notification) {
+
+            $notification_message = '';
+            switch ($notification) {
+                case 'title-too-long':
+                    $notification_message = 'title too long, must be within 250 characters';
+                    break;
+                case 'content-too-long':
+                    $notification_message = 'content too long, must be within 500 characters';
+                    break;
+            }
+
+            echo "<p class='text-sm mb-4' style='color:#FFE8D6;'>💡 $notification_message 💡</p>";
+        }
+
+
+        ?>
         <div class="relative bg-gray-100 p-4 border border-gray-300 font-mono leading-6 w-96 shadow">
             <a href="/note/delete/<?= $viewData['journalData']['id'] ?>" class='icon-button absolute top-0 right-0 translate-x-3 -translate-y-4 w-12 h-12 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-8 h-8' data-icon='ph:trash-fill'></span></a>
             <form method="POST" action="/note<?= isset($viewData['journalData']['id']) ? "/update/" . $viewData['journalData']['id'] : '' ?>" class="p-2 flex flex-col" enctype="multipart/form-data">
@@ -46,9 +70,9 @@
                             echo "<img src='data:image/*;base64," . ($viewData['journalData']['images'][$i]['filename'] ?? '') . "' alt='' class='max-w-full max-h-full'>";
                             echo "<a href='/image/delete/{$viewData['journalData']['images'][$i]['id']}' class='image-button transition absolute top-0 right-0 translate-x-3 -translate-y-4 w-8 h-8 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-4 h-4' data-icon='ph:trash-fill'></span></a>";
                         } else {
-                            echo '<input type="file" id="image'.$i.'" name="images[]" accept="image/*" onchange="this.form.submit()" class="absolute w-full h-full opacity-0 cursor-pointer" />
+                            echo '<input type="file" id="image' . $i . '" name="images[]" accept="image/*" onchange="this.form.submit()" class="absolute w-full h-full opacity-0 cursor-pointer" />
                             <span class="text-[#6B705C] text-lg font-bold">+ </span>
-                            <img src="data:image/*;base64,'.($viewData['journalData']['images'][$i]['filename'] ?? '').'" alt="" class="hidden max-w-full max-h-full">';                        
+                            <img src="data:image/*;base64,' . ($viewData['journalData']['images'][$i]['filename'] ?? '') . '" alt="" class="hidden max-w-full max-h-full">';
                         }
                         echo "</label>";
                     }
@@ -67,7 +91,6 @@
     </main>
 
     <script>
-
         // Get all file input elements
         const dropAreas = document.querySelectorAll('.drop-area');
 
@@ -123,7 +146,7 @@
                         dropArea.querySelector('img').src = reader.result;
                         dropArea.querySelector('span').classList.add('hidden');
                         dropArea.querySelector('img').classList.remove('hidden');
-                        
+
                     };
                     reader.readAsDataURL(file);
 
