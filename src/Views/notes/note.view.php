@@ -52,7 +52,7 @@
         ?>
         <div class="relative bg-gray-100 p-4 border border-gray-300 font-mono leading-6 w-96 shadow">
             <a href="/note/delete/<?= $viewData['journalData']['id'] ?>" class='icon-button absolute top-0 right-0 translate-x-3 -translate-y-4 w-12 h-12 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-8 h-8' data-icon='ph:trash-fill'></span></a>
-            <form method="POST" action="/note<?= isset($viewData['journalData']['id']) ? "/update/" . $viewData['journalData']['id'] : '' ?>" class="p-2 flex flex-col" enctype="multipart/form-data">
+            <form method="POST" action="/note/update/<?=$viewData['journalData']['id']?>" class="p-2 flex flex-col" enctype="multipart/form-data">
                 <label class="mb-2" for="title">
                     <input class="w-full h-full bg-transparent outline-none text-center text-xl" type=text name="title" placeholder="Journal Title" value="<?= $viewData['journalData']['title'] ?? '' ?>">
                 </label>
@@ -71,8 +71,8 @@
                             echo "<a href='/image/delete/{$viewData['journalData']['images'][$i]['id']}' class='image-button transition absolute top-0 right-0 translate-x-3 -translate-y-4 w-8 h-8 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-4 h-4' data-icon='ph:trash-fill'></span></a>";
                         } else {
                             echo '<input type="file" id="image' . $i . '" name="images[]" accept="image/*" onchange="this.form.submit()" class="absolute w-full h-full opacity-0 cursor-pointer" />
-                            <div class="flex flex-col justify-center items-center gap-2">
-                            <span class="iconify text-[#5c4235] w-8 h-8" data-icon="solar:upload-line-duotone"></span>
+                            <div class="flex flex-col justify-center items-center">
+                            <span class="iconify text-[#5c4235] w-8 h-8" data-icon="solar:upload-square-bold-duotone"></span>
                             <span class="text-[#5c4235] text-sm text-center">click to upload </span>
                             </div>
                             <img src="data:image/*;base64,' . ($viewData['journalData']['images'][$i]['filename'] ?? '') . '" alt="" class="hidden max-w-full max-h-full">';

@@ -55,14 +55,14 @@
             $note_images = $note['images'];
 
 
-            echo "<div id='entry-$full_date' class='w-10/12 md:w-7/12 flex flex-col mb-20'>";
+            echo "<div id='entry-$full_date' class='relative w-[60vw] flex flex-col mb-20'>";
             echo "<h2 class='text-4xl pb-3 md:pb-0'><span class='text-8xl font-teko text-white block md:inline-block'>$day$day_ordinal</span> $month_name, $year</h2>";
+            echo "<a href='/note/delete/{$note['id']}'><div class='icon-button z-10 absolute top-12 right-0 transition translate-x-[2vw] translate-y-[12vw] md:translate-y-[2vw] w-12 h-12 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-8 h-8' data-icon='ph:trash-fill'></span></div></a>";
             echo "<a href='/note/{$note['id']}'>";
-            echo "<div class='w-[60vw] relative flex flex-col lg:flex-row rounded-xl bg-white px-5 py-7 cursor-pointer hover:shadow-[-5px_5px_0_0_#ddbea9] active:shadow-[-3px_3px_0_0_#CB997E] hover:translate-x-[5px] hover:translate-y-[-5px] active:translate-y-[-3px] active:translate-x-[3px] ease-out duration-300'>";
-            echo "<div class='icon-button absolute top-0 right-0 transition translate-x-3 -translate-y-4 w-12 h-12 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-8 h-8' data-icon='ph:trash-fill'></span></div>";
+            echo "<div class='w-[60vw] flex flex-col lg:flex-row rounded-xl bg-white px-5 py-7 cursor-pointer hover:shadow-[-5px_5px_0_0_#ddbea9] active:shadow-[-3px_3px_0_0_#CB997E] hover:translate-x-[5px] hover:translate-y-[-5px] active:translate-y-[-3px] active:translate-x-[3px] ease-out duration-300'>";
             echo "<div class='w-full lg:w-7/12'>";
             echo "<h3 class='text-4xl block font-bold pb-5'>{$note['title']}</h3>";
-            echo "<p>{$note['content']}</p>";
+            echo "<p class='break-all'>{$note['content']}</p>";
             echo "</div>";
             echo "<div class='w-full lg:w-5/12 grid grid-cols-2 p-5 justify-center place-content-center place-items-center gap-2'>";
             foreach ($note_images as $image) {

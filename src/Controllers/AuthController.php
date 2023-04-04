@@ -177,7 +177,7 @@ class AuthController{
             http://$_SERVER[HTTP_HOST]/auth/login
             -----------------
         ";
-        $headers = "no-reply@example.com";
+        $headers = "no-reply@example.com";                        
 
         AuthController::$mail->From = $headers;
         AuthController::$mail->FromName = 'no-reply';
@@ -185,7 +185,6 @@ class AuthController{
         AuthController::$mail->Subject = $subject;
         AuthController::$mail->Body = $message;
         AuthController::$mail->send();
-
     
         
         header("Location: /auth/login?notification=password-reset");
@@ -200,6 +199,3 @@ class AuthController{
     }
 
 }
-
-
-?>
