@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Controllers;
 
@@ -14,18 +14,21 @@ use \Controllers\DbController;
 use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;
 
-class AuthController{
+class AuthController
+{
 
-    private static $conn; 
+    private static $conn;
     private static $mail;
 
-    public function __construct(){
-       AuthController::$conn = DbController::get_connection();
-       AuthController::$mail = new PHPMailer(true);
+    public function __construct()
+    {
+        AuthController::$conn = DbController::get_connection();
+        AuthController::$mail = new PHPMailer(true);
     }
 
-    public function registerUser(){
-        
+    public function registerUser()
+    {
+
         // echo var_dump($_POST);
         $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL); // validate email format input
         $password = $_POST['password'];
@@ -44,10 +47,10 @@ class AuthController{
 
         // if there is no duplicate...
         $this->adduser($username, $password);
-
     }
 
-    public function addUser($username, $password){
+    public function addUser($username, $password)
+    {
 
         // session_start();
         $_SESSION['user'] = $username;
@@ -77,7 +80,11 @@ class AuthController{
         -----------------
         ";
 
-        $headers = 'no-reply@example.com';
+        $headers = $headers = array(
+            "From: from@example.com",
+            "Reply-To: replyto@example.com",
+        );
+        $headers = implode("\r\n", $headers);
 
         // AuthController::$mail-> isSMTP(); # SMTP is enabled now.
         // AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
@@ -95,12 +102,12 @@ class AuthController{
 
         mail($username, $subject, $message, $headers);
 
-        
+
         header("Location: /auth/login?notification=email-sent");
-        
     }
 
-    public function loginUser(){
+    public function loginUser()
+    {
 
         // // Check session for user login attempts
         // session_start();
@@ -141,11 +148,10 @@ class AuthController{
             $_SESSION['login_success'] = 1;
             $_SESSION['user'] = $username;
 
-             // Update the user's last activity time in the session
-             $_SESSION['last_activity'] = time();
-            
-            header("Location: /home");
+            // Update the user's last activity time in the session
+            $_SESSION['last_activity'] = time();
 
+            header("Location: /home");
         } else {
 
 
@@ -166,13 +172,12 @@ class AuthController{
             // if the user has failed less than 3 times, redirect to login page
             $_SESSION['error'] = 'Wrong username or password';
             header("Location: /auth/login?notification=wrong-input");
-
         }
-
     }
 
-    public function forgotPassword(){
-        
+    public function forgotPassword()
+    {
+
         $username = $_SESSION['user'] ?? $_POST['username'];
 
         // generate a new password
@@ -197,8 +202,12 @@ class AuthController{
             http://$_SERVER[HTTP_HOST]/auth/login
             -----------------
         ";
-        $headers = "no-reply@example.com";  
-        
+        $headers = $headers = array(
+            "From: from@example.com",
+            "Reply-To: replyto@example.com",
+        );
+        $headers = implode("\r\n", $headers);
+
         // AuthController::$mail-> isSMTP(); # SMTP is enabled now.
         // AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
         // AuthController::$mail->SMTPDebug   = 2;
@@ -211,18 +220,19 @@ class AuthController{
         // AuthController::$mail->Body = $message;
         // AuthController::$mail->send();
 
-        mail($username, $subject, $message, $headers);
-    
-        
-        header("Location: /auth/login?notification=password-reset");
 
+
+        mail($username, $subject, $message, $headers);
+
+
+        header("Location: /auth/login?notification=password-reset");
     }
 
-    public function logoutUser(){
+    public function logoutUser()
+    {
         session_start();
         session_unset();
         session_destroy();
         header("Location: /auth/login");
     }
-
 }
