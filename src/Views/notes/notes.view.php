@@ -22,7 +22,10 @@
 
         <h2 class="lg:flex-col text-5xl font-teko block text-center pb-4 text-[#F8F6F2]">Journals</h2>
 
-        <a href='/note/create' class="transition mt-4 lg:mt-0 mb-4 top-4 right-4 text-xl text-[#CB997E] bg-[#F8F6F2] hover:text-[#F8F6F2] hover:bg-[#DDBEA9] px-4 py-2 rounded-lg">Create a new journal entry</a>
+        <a href="/note/create" class="transition relative gap-2 items-center flex flex-row justify-center mb-8 rounded-xl bg-[#DDBEA9] px-5 py-2 cursor-pointer hover:shadow-[-5px_5px_0_0_#CB997E] active:shadow-[-3px_3px_0_0_#CB997E] hover:translate-x-[5px] hover:translate-y-[-5px] active:translate-y-[-3px] active:translate-x-[3px] ease-out duration-300'">
+                <span class='iconify text-[#5c4235] w-8 h-8 py-auto' data-icon='solar:pen-new-square-bold-duotone'></span>
+                <span class="text-xl text-[#5c4235]"> Create a new entry </span>
+            </a>
 
         <?php
 

@@ -71,7 +71,10 @@
                             echo "<a href='/image/delete/{$viewData['journalData']['images'][$i]['id']}' class='image-button transition absolute top-0 right-0 translate-x-3 -translate-y-4 w-8 h-8 text-[#F8F6F2] bg-[#CB997E] hover:bg-[#DDBEA9] font-medium rounded-full text-sm flex items-center justify-center'><span class='iconify text-[#F8F6F2] w-4 h-4' data-icon='ph:trash-fill'></span></a>";
                         } else {
                             echo '<input type="file" id="image' . $i . '" name="images[]" accept="image/*" onchange="this.form.submit()" class="absolute w-full h-full opacity-0 cursor-pointer" />
-                            <span class="text-[#6B705C] text-lg font-bold">+ </span>
+                            <div class="flex flex-col justify-center items-center gap-2">
+                            <span class="iconify text-[#5c4235] w-8 h-8" data-icon="solar:upload-line-duotone"></span>
+                            <span class="text-[#5c4235] text-sm text-center">click to upload </span>
+                            </div>
                             <img src="data:image/*;base64,' . ($viewData['journalData']['images'][$i]['filename'] ?? '') . '" alt="" class="hidden max-w-full max-h-full">';
                         }
                         echo "</label>";
@@ -89,71 +92,6 @@
         </a>
 
     </main>
-
-    <script>
-        // Get all file input elements
-        const dropAreas = document.querySelectorAll('.drop-area');
-
-        dropAreas.forEach(dropArea => {
-            // Add dragover event listener to the drop area
-            dropArea.addEventListener('dragover', e => {
-                e.preventDefault();
-                dropArea.classList.add('dragover');
-            });
-
-            // Add dragleave event listener to the drop area
-            dropArea.addEventListener('dragleave', e => {
-                e.preventDefault();
-                dropArea.classList.remove('dragover');
-            });
-
-            // Add drop event listener to the drop area
-            dropArea.addEventListener('drop', e => {
-                e.preventDefault();
-                dropArea.classList.remove('dragover');
-
-                // Get the dropped files
-                const files = e.dataTransfer.files;
-
-                // Check if any files were dropped
-                if (files.length > 0) {
-                    // Display the first file in the drop area as a preview
-                    const file = files[0];
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        dropArea.querySelector('img').src = reader.result;
-                        dropArea.querySelector('span').classList.add('hidden');
-                        dropArea.querySelector('img').classList.remove('hidden');
-                    };
-                    reader.readAsDataURL(file);
-
-                }
-            });
-
-            dropArea.addEventListener('change', (e) => {
-                e.preventDefault();
-                dropArea.classList.remove('dragover');
-
-                // Get the dropped files
-                const files = e.target.files;
-
-                // Check if any files were dropped
-                if (files.length > 0) {
-                    // Display the first file in the drop area as a preview
-                    const file = files[0];
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        dropArea.querySelector('img').src = reader.result;
-                        dropArea.querySelector('span').classList.add('hidden');
-                        dropArea.querySelector('img').classList.remove('hidden');
-
-                    };
-                    reader.readAsDataURL(file);
-
-                }
-            })
-        });
-    </script>
 
 </body>
 
