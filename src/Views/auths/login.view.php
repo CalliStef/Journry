@@ -24,7 +24,7 @@
             $notification_message = '';
             switch ($notification) {
                 case 'activation':
-                    $notification_message = 'Your account has not been activated. Please check your email for the activation link.';
+                    $notification_message = 'Your account has not been activated. Please check your email for the activation link (Don\'t forget to check your spam folder!).';
                     break;
                 case 'wrong-input':
                     $notification_message = 'Invalid username or password.';
@@ -36,7 +36,7 @@
                     $notification_message = 'Your password has been reset. Please check your email for the new password.';
                     break;
                 case 'email-sent':
-                    $notification_message = 'Your account has been created. Please check your email for the activation link.';
+                    $notification_message = 'Your account has been created. Please check your email for the activation link (Don\'t forget to check your spam folder!).';
                     break;
             }
 
