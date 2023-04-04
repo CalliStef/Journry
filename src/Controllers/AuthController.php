@@ -93,18 +93,24 @@ class AuthController
         // // AuthController::$mail->SMTPSecure = 'tls';
         // // AuthController::$mail->Port = 587;
 
-        // AuthController::$mail->From = $headers;
-        // AuthController::$mail->FromName = 'no-reply';
-        // AuthController::$mail->addAddress($username);
-        // AuthController::$mail->Subject = $subject;
-        // AuthController::$mail->Body = $message;
-        // AuthController::$mail->send();
+        AuthController::$mail->From = $headers;
+        AuthController::$mail->FromName = 'no-reply';
+        AuthController::$mail->addAddress($username);
+        AuthController::$mail->Subject = $subject;
+        AuthController::$mail->Body = $message;
+        AuthController::$mail->send();
 
-        if(mail($username, $subject, $message, $headers)) {
+        if (AuthController::$mail->send()) {
             echo "Email sent";
         } else {
             echo "Email sending failed";
         }
+
+        // if(mail($username, $subject, $message, $headers)) {
+        //     echo "Email sent";
+        // } else {
+        //     echo "Email sending failed";
+        // }
         // mail($username, $subject, $message, $headers);
 
 die();
@@ -214,15 +220,27 @@ die();
         );
         $headers = implode("\r\n", $headers);
 
+        AuthController::$mail->From = $headers;
+        AuthController::$mail->FromName = 'no-reply';
+        AuthController::$mail->addAddress($username);
+        AuthController::$mail->Subject = $subject;
+        AuthController::$mail->Body = $message;
+        AuthController::$mail->send();
 
-
-        if(mail($username, $subject, $message, $headers)) {
+        // check if phpmailer is sent
+        if (AuthController::$mail->send()) {
             echo "Email sent";
         } else {
             echo "Email sending failed";
         }
 
-die();
+        // if(mail($username, $subject, $message, $headers)) {
+        //     echo "Email sent";
+        // } else {
+        //     echo "Email sending failed";
+        // }
+
+        die();
 
         header("Location: /auth/login?notification=password-reset");
     }
