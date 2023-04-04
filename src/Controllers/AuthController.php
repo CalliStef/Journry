@@ -39,7 +39,7 @@ class AuthController{
         // if there is a duplicate...
         if ($count > 0) {
             $_SESSION['error'] = 'Username already exists';
-            header("Location: /auth/signup?notification=user-exists"); // navigate back to the signup page
+            header("Location: /auth/signup?notification=user-exists"); // navigate back to the signup page with an error message
             exit;
         }
 
