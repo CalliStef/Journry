@@ -26,7 +26,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
         return function ($vars) use ($handler) {
             if (!isset($_SESSION['login_success'])) {
                 header('Location: /auth/signup');
-                return;
+            }
+            if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 10)) {
+                // redirect to the logout page to destroy the session and ;
+                header('Location: /auth/logout');
+            } else {
+                $_SESSION['last_activity'] = time();
             }
             call_user_func($handler, $vars);
         };
@@ -49,8 +54,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     });
     $r->post('/auth/forgot-password', [$authController, 'forgotPassword']);
     $r->get('/auth/logout', [$authController, 'logoutUser']);
-
-
     $r->get('/home', $middleware(function() {
         include './src/Views/home.view.php';
     }));
