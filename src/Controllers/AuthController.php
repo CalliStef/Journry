@@ -214,18 +214,6 @@ die();
         );
         $headers = implode("\r\n", $headers);
 
-        // AuthController::$mail-> isSMTP(); # SMTP is enabled now.
-        // AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
-        // AuthController::$mail->SMTPDebug   = 2;
-        // AuthController::$mail-> SMTPAuth = true;
-        // AuthController::$mail->setFrom('callistastefanie@gmail.com', 'no-reply'); 
-
-        // AuthController::$mail->From = $headers;
-        // AuthController::$mail->addAddress($username);
-        // AuthController::$mail->Subject = $subject;
-        // AuthController::$mail->Body = $message;
-        // AuthController::$mail->send();
-
 
 
         if(mail($username, $subject, $message, $headers)) {
