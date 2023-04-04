@@ -11,11 +11,11 @@ class DbController{
 
     }
 
-    public static function create_connection($host, $db, $user, $pass)
+    public static function create_connection($host, $db, $user, $pass, $port)
     {
 
         try {
-            DbController::$db_connection = new \PDO("mysql:host=$host;dbname=$db", $user, $pass);
+            DbController::$db_connection = new \PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass);
             return DbController::$db_connection;
         } catch(\PDOException $e) {
             die("Connection failed: " . $e->getMessage());
