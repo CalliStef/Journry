@@ -1,33 +1,28 @@
 <?php 
 
-
-//  -- usernames are emails
-// check for any duplicate usernames in the database
-// if there is a duplicate, redirect to login page - maybe?
-// if no duplicate, insert the username and password into the database
-
-// After registering, an email is sent to the user with a hyperlink in it. 
-// When the user clicks on the hyperlink, the account is activated and yser can log in
-// if the user doesn't click on the hyperlink, user cannot access the account
-
-// if the user fails 3 times to enter the correct password, 
-// the user is locked out and an email is sent to the user with a new password
-// and a hyperlink to click so that they may login again
-
-
-
 namespace Controllers;
+
+require './vendor/autoload.php';
 
 session_start();
 
+// require_once '/path/to/PHPMailer/src/PHPMailer.php';
+// require_once '/path/to/PHPMailer/src/SMTP.php';
+// require_once '/path/to/PHPMailer/src/Exception.php';
+
+
 use \Controllers\DbController;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class AuthController{
 
     private static $conn; 
+    private static $mail;
 
     public function __construct(){
        AuthController::$conn = DbController::get_connection();
+       AuthController::$mail = new PHPMailer(true);
     }
 
     public function registerUser(){
@@ -71,7 +66,8 @@ class AuthController{
         // create the activation link
         $activation_link = "http://$_SERVER[HTTP_HOST]/src/activate.php?token=$token";
 
-        // send activation email
+
+        // // send activation email
         $subject = 'Activate your account';
         $message = "
 
@@ -82,9 +78,14 @@ class AuthController{
         -----------------
         ";
 
-        $headers = 'From: no-reply@example.com';
+        $headers = 'no-reply@example.com';
 
-        mail($username, $subject, $message, $headers);
+        AuthController::$mail->From = $headers;
+        AuthController::$mail->FromName = 'no-reply';
+        AuthController::$mail->addAddress($username);
+        AuthController::$mail->Subject = $subject;
+        AuthController::$mail->Body = $message;
+        AuthController::$mail->send();
         
         header("Location: /auth/login?notification=email-sent");
         
@@ -119,6 +120,9 @@ class AuthController{
 
             $_SESSION['login_success'] = 1;
             $_SESSION['user'] = $username;
+
+             // Update the user's last activity time in the session
+             $_SESSION['last_activity'] = time();
             
             header("Location: /home");
 
@@ -173,17 +177,24 @@ class AuthController{
             http://$_SERVER[HTTP_HOST]/auth/login
             -----------------
         ";
-        $headers = "From: no-reply@example.com";
+        $headers = "no-reply@example.com";
 
-        mail($username, $subject, $message, $headers);
+        AuthController::$mail->From = $headers;
+        AuthController::$mail->FromName = 'no-reply';
+        AuthController::$mail->addAddress($username);
+        AuthController::$mail->Subject = $subject;
+        AuthController::$mail->Body = $message;
+        AuthController::$mail->send();
 
+    
+        
         header("Location: /auth/login?notification=password-reset");
-
 
     }
 
     public function logoutUser(){
         session_start();
+        session_unset();
         session_destroy();
         header("Location: /auth/login");
     }

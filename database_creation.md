@@ -15,14 +15,15 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 CREATE TABLE IF NOT EXISTS `journals` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(250) NOT NULL,
-  `content` varchar(500) NOT NULL,
+  `title` varchar(250) NOT NULL DEFAULT 'No title yet',
+  `content` varchar(500) NOT NULL DEFAULT 'No content yet',
   `created_date` date NOT NULL,
   `user_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `journals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
+
 
 CREATE TABLE `images` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -32,6 +33,7 @@ CREATE TABLE `images` (
   KEY `journal_id` (`journal_id`),
   CONSTRAINT `images_ibfk_1` FOREIGN KEY (`journal_id`) REFERENCES `journals` (`id`)
 );
+
 
 
 ```

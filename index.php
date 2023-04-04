@@ -13,7 +13,7 @@ $dotenv->load();
 
 DbController::create_connection($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASS"]);
 
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
+$dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
 
     $dbController = new DbController();
     $authController = new AuthController();
@@ -22,55 +22,73 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $imageServices = new ImageServices();
     $noteServices = new NoteServices();
 
+    $middleware = function ($handler) {
+        return function ($vars) use ($handler) {
+            if (!isset($_SESSION['login_success'])) {
+                header('Location: /auth/signup');
+            }
+            if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 600)) {
+                // redirect to the logout page to destroy the session and ;
+                header('Location: /auth/logout');
+            } else {
+                $_SESSION['last_activity'] = time();
+            }
+            call_user_func($handler, $vars);
+        };
+    };
 
-    $r->addRoute('GET', '/', function(){
+
+    $r->get('/', function () {
         header('Location: /auth/signup');
     });
-    $r->addRoute('GET', '/auth/signup', function(){ include './src/Views/auths/signup.view.php'; });
-    $r->addRoute('POST', '/auth/signup',[$authController, 'registerUser']);
-    $r->addRoute('GET', '/auth/login', function(){ include './src/Views/auths/login.view.php'; });
-    $r->addRoute('POST', '/auth/login', [$authController, 'loginUser']);
-    $r->addRoute('GET', '/auth/forgot-password', function(){ include './src/Views/auths/forgot-password.view.php'; });
-    $r->addRoute('POST', '/auth/forgot-password', [$authController, 'forgotPassword']);
-    $r->addRoute('GET', '/auth/logout', [$authController, 'logoutUser']);
-    $r->addRoute('GET', '/home', function(){ 
-        if(!isset($_SESSION['login_success'])){ 
-            header('Location: /auth/signup'); 
-        }
-        include './src/Views/home.view.php'; 
+    $r->get('/auth/signup', function () {
+        include './src/Views/auths/signup.view.php';
     });
+    $r->post('/auth/signup', [$authController, 'registerUser']);
+    $r->get('/auth/login', function () {
+        include './src/Views/auths/login.view.php';
+    });
+    $r->post('/auth/login', [$authController, 'loginUser']);
+    $r->get('/auth/forgot-password', function () {
+        include './src/Views/auths/forgot-password.view.php';
+    });
+    $r->post('/auth/forgot-password', [$authController, 'forgotPassword']);
+    $r->get('/auth/logout', [$authController, 'logoutUser']);
+    $r->get('/home', $middleware(function() {
+        include './src/Views/home.view.php';
+    }));
 
-        $r->addRoute('GET', '/notes', function() use ($noteServices){ 
-            $viewData = [
-                'notes' => $noteServices->getNotes(),
-            ];
+    $r->get('/notes', $middleware(function () use ($noteServices) {
+        $viewData = [
+            'notes' => $noteServices->getNotes(),
+        ];
 
-            include './src/Views/notes/notes.view.php'; 
-        });
-        $r->addRoute('GET', '/note', function(){ 
-            include './src/Views/notes/add-note.view.php'; 
-        });
-        $r->addRoute('POST', '/note', [$noteController, 'addNote']);
-        $r->addRoute('GET', '/note/{id:\d+}', function($id) use ($noteServices) {
-            $viewData = [
-                'journalData' => $noteServices->getNoteById($id['id']),
-            ];
-    
-            include './src/Views/home.view.php';
-        });
-        $r->post('/note/update/{id:\d+}', function($id) use ($noteController) {
-            $noteController->updateNote($id['id']);
-        });
-        $r->addRoute('GET', '/note/delete/{id:\d+}', function($id) use ($noteServices) {
-            $noteServices->deleteNoteById($id['id']);
-        });
-        $r->addRoute('GET', '/image/delete/{id:\d+}', function($id) use ($imageServices) {
-            $imageServices->deleteImageById($id['id']);
-        });
-       
-    
-   
+        include './src/Views/notes/notes.view.php';
+    }));
+    $r->get('/note/create', $middleware(function() use ($noteServices) {
+       $noteServices->createNote();
+    }));
 
+    $r->get('/note/{id:\d+}', $middleware(function ($id) use ($noteServices) {
+        $viewData = [
+            'journalData' => $noteServices->getNoteById($id['id']),
+        ];
+
+        include './src/Views/notes/note.view.php';
+    }));
+    $r->post('/note/update/{id:\d+}', $middleware(function ($id) use ($noteController) {
+        $noteController->updateNote($id['id']);
+    }));
+    $r->get('/note/delete/{id:\d+}', $middleware(function ($id) use ($noteServices) {
+        $noteServices->deleteNoteById($id['id']);
+    }));
+    $r->get('/image/add/{id:\d+}', $middleware(function ($id) use ($imageServices) { // param is a journal id
+        
+        $imageServices->addImage($_FILES['images'], $id['id']);
+    }));
+    $r->get('/image/delete/{id:\d+}', $middleware(function ($id) use ($imageServices) { // param is an image id
+        $imageServices->deleteImageById($id['id']);
+    }));
 });
 
 // Fetch method and URI from somewhere
@@ -94,7 +112,7 @@ switch ($routeInfo[0]) {
         break;
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];
-        $vars = $routeInfo[2];     
+        $vars = $routeInfo[2];
         call_user_func($handler, $vars);
         break;
 }

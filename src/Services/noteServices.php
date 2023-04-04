@@ -3,13 +3,16 @@
 namespace Services;
 
 use \Controllers\DbController;
+use \Services\UserServices;
 
 class NoteServices {
 
     private static $conn;
+    private static $user_services;
 
     public function __construct(){
         NoteServices::$conn = DbController::get_connection();
+        NoteServices::$user_services = new UserServices();
     }
 
     public function getNotes(){
@@ -53,9 +56,18 @@ class NoteServices {
 
         return $journal;
     }
+    public function createNote(){
+        $user_email = $_SESSION['user'];
+        $user_id = NoteServices::$user_services->getUserIdByEmail($user_email);
+        $stmt = NoteServices::$conn->prepare("INSERT INTO journals (user_id, created_date) VALUES (?, NOW())");
+        $stmt->execute([$user_id]);
+        $journal_id = NoteServices::$conn->lastInsertId();
+        
+        header("Location: /note/$journal_id");
+    }
 
     public function addNote(){
-        
+
        
     }
 
