@@ -5,7 +5,7 @@ require_once './src/Controllers/AuthController.php';
 require_once './src/Controllers/NoteController.php';
 
 require_once './src/Services/ImageServices.php';
-require_once './src/Services/NoteServices.php';
+require_once './src/Services/noteServices.php';
 
 use \Controllers\DbController;
 use \Controllers\AuthController;

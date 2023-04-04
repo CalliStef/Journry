@@ -10,7 +10,7 @@ class NoteServices {
     private static $conn;
     private static $user_services;
 
-    public function __construct(){
+    public function __construct(){ 
         NoteServices::$conn = DbController::get_connection();
         NoteServices::$user_services = new UserServices();
     }
