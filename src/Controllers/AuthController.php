@@ -79,19 +79,22 @@ class AuthController{
 
         $headers = 'no-reply@example.com';
 
-        AuthController::$mail-> isSMTP(); # SMTP is enabled now.
-        AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
-        AuthController::$mail->SMTPDebug   = 2;
-        AuthController::$mail-> SMTPAuth = true;
-        // AuthController::$mail->SMTPSecure = 'tls';
-        // AuthController::$mail->Port = 587;
+        // AuthController::$mail-> isSMTP(); # SMTP is enabled now.
+        // AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
+        // AuthController::$mail->SMTPDebug   = 2;
+        // AuthController::$mail-> SMTPAuth = true;
+        // // AuthController::$mail->SMTPSecure = 'tls';
+        // // AuthController::$mail->Port = 587;
 
-        AuthController::$mail->From = $headers;
-        AuthController::$mail->FromName = 'no-reply';
-        AuthController::$mail->addAddress($username);
-        AuthController::$mail->Subject = $subject;
-        AuthController::$mail->Body = $message;
-        AuthController::$mail->send();
+        // AuthController::$mail->From = $headers;
+        // AuthController::$mail->FromName = 'no-reply';
+        // AuthController::$mail->addAddress($username);
+        // AuthController::$mail->Subject = $subject;
+        // AuthController::$mail->Body = $message;
+        // AuthController::$mail->send();
+
+        mail($username, $subject, $message, $headers);
+
         
         header("Location: /auth/login?notification=email-sent");
         
@@ -196,17 +199,19 @@ class AuthController{
         ";
         $headers = "no-reply@example.com";  
         
-        AuthController::$mail-> isSMTP(); # SMTP is enabled now.
-        AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
-        AuthController::$mail->SMTPDebug   = 2;
-        AuthController::$mail-> SMTPAuth = true;
-        AuthController::$mail->setFrom('callistastefanie@gmail.com', 'no-reply'); 
+        // AuthController::$mail-> isSMTP(); # SMTP is enabled now.
+        // AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
+        // AuthController::$mail->SMTPDebug   = 2;
+        // AuthController::$mail-> SMTPAuth = true;
+        // AuthController::$mail->setFrom('callistastefanie@gmail.com', 'no-reply'); 
 
-        AuthController::$mail->From = $headers;
-        AuthController::$mail->addAddress($username);
-        AuthController::$mail->Subject = $subject;
-        AuthController::$mail->Body = $message;
-        AuthController::$mail->send();
+        // AuthController::$mail->From = $headers;
+        // AuthController::$mail->addAddress($username);
+        // AuthController::$mail->Subject = $subject;
+        // AuthController::$mail->Body = $message;
+        // AuthController::$mail->send();
+
+        mail($username, $subject, $message, $headers);
     
         
         header("Location: /auth/login?notification=password-reset");
