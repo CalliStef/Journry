@@ -1,4 +1,7 @@
 <?php
+
+require_once './config.php';
+
 require './vendor/autoload.php';
 require_once './src/Controllers/DbController.php';
 require_once './src/Controllers/AuthController.php';

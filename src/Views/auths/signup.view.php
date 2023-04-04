@@ -26,6 +26,9 @@
                 case 'user-exists':
                     $notification_message = 'This email is already registered. Please log in.';
                     break;
+                case 'user-does-not-exist':
+                    $notification_message = 'This email is not registered. Please sign up.';
+                    break;
             }
 
             echo "<p class='text-sm mb-4' style='color:#FFE8D6;'>💡 $notification_message 💡</p>";

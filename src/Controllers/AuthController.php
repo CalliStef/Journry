@@ -100,6 +100,17 @@ class AuthController{
         $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL); // validate email format input
         $password = $_POST['password'];
 
+        // check if the username exists in the database
+        $stmt = AuthController::$conn->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        $count = $stmt->fetchColumn();
+
+        // if user doesn't exist in the database, redirect to signup page
+        if ($count == 0) {
+            header("Location: /auth/signup?notification=user-does-not-exist");
+            exit;
+        }
+
         // check with database to see if the password is the same
         $stmt = AuthController::$conn->prepare("SELECT * FROM users WHERE username = ?");
         $stmt->execute([$username]);
