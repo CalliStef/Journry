@@ -27,7 +27,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
             if (!isset($_SESSION['login_success'])) {
                 header('Location: /auth/signup');
             }
-            if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 10)) {
+            if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 600)) {
                 // redirect to the logout page to destroy the session and ;
                 header('Location: /auth/logout');
             } else {
