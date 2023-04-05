@@ -63,6 +63,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     });
     $r->post('/auth/forgot-password', [$authController, 'forgotPassword']);
     $r->get('/auth/logout', [$authController, 'logoutUser']);
+    // $r->get('/auth/activate', include './src/activate.php');
+
     $r->get('/home', $middleware(function() {
         include './src/Views/home.view.php';
     }));

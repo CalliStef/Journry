@@ -2,28 +2,20 @@
 
 namespace Controllers;
 
-require './vendor/autoload.php';
-
 session_start();
 
-// require_once '/PHPMailer/src/PHPMailer.php';
-// require_once '/path/to/PHPMailer/src/SMTP.php';
-// require_once '/path/to/PHPMailer/src/Exception.php';
-
 use \Controllers\DbController;
-use \PHPMailer\PHPMailer\PHPMailer;
-use \PHPMailer\PHPMailer\Exception;
+use \Services\MailServices;
+
 
 class AuthController
 {
 
     private static $conn;
-    private static $mail;
 
     public function __construct()
     {
         AuthController::$conn = DbController::get_connection();
-        AuthController::$mail = new PHPMailer(true);
     }
 
     public function registerUser()
@@ -72,7 +64,6 @@ class AuthController
         // // send activation email
         $subject = 'Activate your account';
         $message = "
-
         Thanks for signing up! 🥳🙌✨
         Your account has been created, you can login by pressing the url below. 
         -----------------
@@ -80,40 +71,10 @@ class AuthController
         -----------------
         ";
 
-        $headers = $headers = array(
-            "From: from@example.com",
-            "Reply-To: replyto@example.com",
-        );
-        $headers = implode("\r\n", $headers);
+        $mailServices = new MailServices();
+        $mailServices->sendMail($username, $subject, $message);
 
-        // AuthController::$mail-> isSMTP(); # SMTP is enabled now.
-        // AuthController::$mail-> Host = 'smtp.gmail.com'; //smtp.gmail.com
-        // AuthController::$mail->SMTPDebug   = 2;
-        // AuthController::$mail-> SMTPAuth = true;
-        // // AuthController::$mail->SMTPSecure = 'tls';
-        // // AuthController::$mail->Port = 587;
 
-        AuthController::$mail->From = $headers;
-        AuthController::$mail->FromName = 'no-reply';
-        AuthController::$mail->addAddress($username);
-        AuthController::$mail->Subject = $subject;
-        AuthController::$mail->Body = $message;
-        AuthController::$mail->send();
-
-        if (AuthController::$mail->send()) {
-            echo "Email sent";
-        } else {
-            echo "Email sending failed";
-        }
-
-        // if(mail($username, $subject, $message, $headers)) {
-        //     echo "Email sent";
-        // } else {
-        //     echo "Email sending failed";
-        // }
-        // mail($username, $subject, $message, $headers);
-
-die();
         header("Location: /auth/login?notification=email-sent");
         
     }
@@ -214,34 +175,11 @@ die();
             http://$_SERVER[HTTP_HOST]/auth/login
             -----------------
         ";
-        $headers = $headers = array(
-            "From: from@example.com",
-            "Reply-To: replyto@example.com",
-        );
-        $headers = implode("\r\n", $headers);
 
-        AuthController::$mail->From = $headers;
-        AuthController::$mail->FromName = 'no-reply';
-        AuthController::$mail->addAddress($username);
-        AuthController::$mail->Subject = $subject;
-        AuthController::$mail->Body = $message;
-        AuthController::$mail->send();
-
-        // check if phpmailer is sent
-        if (AuthController::$mail->send()) {
-            echo "Email sent";
-        } else {
-            echo "Email sending failed";
-        }
-
-        // if(mail($username, $subject, $message, $headers)) {
-        //     echo "Email sent";
-        // } else {
-        //     echo "Email sending failed";
-        // }
-
-        die();
-
+       
+        $mailServices = new MailServices();
+        $mailServices->sendMail($username, $subject, $message);
+       
         header("Location: /auth/login?notification=password-reset");
     }
 
