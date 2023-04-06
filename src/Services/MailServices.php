@@ -28,10 +28,8 @@ class MailServices{
     
             $sendgrid = new \SendGrid($_ENV['SENDGRID_API_KEY']);
             
-            $response = $sendgrid->send($mail);
-            print $response->statusCode() . "\n";
-            print_r($response->headers());
-            print $response->body() . "\n";
+            $sendgrid->send($mail);
+          
         } catch (\Exception $e) {
             echo 'Caught exception: '. $e->getMessage() ."\n";
         }
