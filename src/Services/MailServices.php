@@ -17,15 +17,17 @@ class MailServices{
     }
 
     public function sendMail($to, $subject, $message){
-        $mail = new Mail();
-        $mail->setFrom("callistastefanie@gmail.com");
-        $mail->setSubject($subject);
-        $mail->addTo($to);
-        $mail->addContent("text/plain", $message);
-
-        $sendgrid = new \SendGrid($_ENV['SENDGRID_API_KEY']);
+       
 
         try {
+            $mail = new Mail();
+            $mail->setFrom("callistastefanie@gmail.com");
+            $mail->setSubject($subject);
+            $mail->addTo($to);
+            $mail->addContent("text/plain", $message);
+    
+            $sendgrid = new \SendGrid($_ENV['SENDGRID_API_KEY']);
+            
             $response = $sendgrid->send($mail);
             print $response->statusCode() . "\n";
             print_r($response->headers());
