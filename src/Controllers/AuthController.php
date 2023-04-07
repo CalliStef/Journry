@@ -105,9 +105,7 @@ class AuthController
         $stmt->execute([$username]);
         $user = $stmt->fetch();
 
-        echo "password: " . $password . "<br>";
-        echo "user password: " . $user['password'] . "<br>";
-
+      
         // check if the password is the same as the one in the database
         if (password_verify($password, $user['password'])) {
 
