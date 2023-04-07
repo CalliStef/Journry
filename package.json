@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tailwind-watch": "npx tailwindcss -i ./public/index.css -o ./dist/output.css --watch"
+    "tailwind-watch": "npx tailwindcss -i ./public/index.css -o ./dist/output.css --watch",
+    "pest": "./vendor/bin/pest"
   },
   "keywords": [],
   "author": "",
