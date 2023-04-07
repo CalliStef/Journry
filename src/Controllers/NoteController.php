@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-require_once '../Services/NoteServices.php';
+require_once __DIR__ . '/src/Services/NoteServices.php';
 
 use Services\NoteServices;
 

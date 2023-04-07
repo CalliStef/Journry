@@ -2,7 +2,7 @@
 
 namespace Repositories;
 
-require_once '../Controllers/DbController.php';
+require_once __DIR__ . '/src/Controllers/DbController.php';
 require_once 'UserRepositories.php';
 
 use Controllers\DbController;
