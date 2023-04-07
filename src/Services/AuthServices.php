@@ -2,7 +2,7 @@
 
 namespace Services;
 
-
+session_start();
 
 use Repositories\UserRepositories;
 use Services\MailServices;
@@ -21,7 +21,7 @@ class AuthServices{
     public function addUser($username, $password)
     {
 
-        session_start();
+        // session_start();
         $_SESSION['user'] = $username;
 
         // hash the password
