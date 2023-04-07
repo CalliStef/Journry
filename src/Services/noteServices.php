@@ -2,6 +2,10 @@
 
 namespace Services;
 
+require_once(__DIR__ . '/../Repositories/UserRepositories.php');
+require_once(__DIR__ . '/../Repositories/NoteRepositories.php');
+require_once(__DIR__ . '/../Repositories/ImageRepositories.php');
+
 use Repositories\UserRepositories;
 use Repositories\NoteRepositories;
 use Repositories\ImageRepositories;
