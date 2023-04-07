@@ -2,8 +2,8 @@
 
 namespace Services;
 
-use \Repositories\UserRepositories;
-use \Services\MailServices;
+use Repositories\UserRepositories;
+use Services\MailServices;
 
 
 class AuthServices{

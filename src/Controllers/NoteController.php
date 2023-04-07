@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use \Services\NoteServices;
+use Services\NoteServices;
 
 class NoteController{
 

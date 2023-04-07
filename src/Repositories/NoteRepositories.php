@@ -2,8 +2,8 @@
 
 namespace Repositories;
 
-use \Controllers\DbController;
-use \Repositories\UserRepositories;
+use Controllers\DbController;
+use Repositories\UserRepositories;
 
 class NoteRepositories {
 

@@ -4,8 +4,8 @@ namespace Controllers;
 
 session_start();
 
-use \Services\AuthServices;
-use \Repositories\UserRepositories;
+use Services\AuthServices;
+use Repositories\UserRepositories;
 
 
 class AuthController
