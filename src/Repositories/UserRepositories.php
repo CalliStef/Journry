@@ -1,7 +1,7 @@
 <?php 
 namespace Repositories;
 
-require_once(__DIR__ . '/../Controllers/DbController.php');
+require_once '../Controllers/DbController.php';
 
 use Controllers\DbController;
 

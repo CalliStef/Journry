@@ -4,8 +4,8 @@ namespace Controllers;
 
 session_start();
 
-require_once(__DIR__ . '/../Services/AuthServices.php');
-require_once(__DIR__ . '/../Repositories/UserRepositories.php');
+require_once '../Services/AuthServices.php';
+require_once '../Repositories/UserRepositories.php';
 
 use Services\AuthServices;
 use Repositories\UserRepositories;
