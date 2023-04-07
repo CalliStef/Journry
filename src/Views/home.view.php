@@ -12,7 +12,7 @@
 
 <body>
     <main class="flex flex-col items-center justify-center h-screen bg-[#6b705c]">
-        <h1 class="text-5xl font-bold mb-8 text-[#393c31]">Welcome</h1>
+        <h1 class="text-5xl font-bold mb-8 text-[#393c31]">Welcome to Journry! 👋 </h1>
         <div class="flex gap-4">
             <a href="/notes" class="w-[30vw] transition relative flex flex-row items-center justify-center md:flex-col rounded-xl bg-[#DDBEA9] px-5 py-7 cursor-pointer hover:shadow-[-5px_5px_0_0_#CB997E] active:shadow-[-3px_3px_0_0_#CB997E] hover:translate-x-[5px] hover:translate-y-[-5px] active:translate-y-[-3px] active:translate-x-[3px] ease-out duration-300">
                 <span class='iconify text-[#5c4235] w-24 h-24 mb-2' data-icon='solar:notes-bold-duotone'></span>

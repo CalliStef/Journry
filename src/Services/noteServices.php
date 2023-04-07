@@ -2,93 +2,53 @@
 
 namespace Services;
 
-use \Controllers\DbController;
-use \Services\UserServices;
+use \Repositories\UserRepositories;
+use \Repositories\NoteRepositories;
+use \Repositories\ImageRepositories;
 
-class NoteServices {
 
-    private static $conn;
-    private static $user_services;
+class NoteServices{
 
-    public function __construct(){ 
-        NoteServices::$conn = DbController::get_connection();
-        NoteServices::$user_services = new UserServices();
+    private static $user_repositories;
+    private static $note_repositories;
+    private static $image_repositories;
+
+    public function __construct(){
+        NoteServices::$user_repositories = new UserRepositories();
+        NoteServices::$note_repositories = new NoteRepositories();
+        NoteServices::$image_repositories = new ImageRepositories();
     }
 
-    public function getNotes(){
-        $user_email = $_SESSION['user'];
+    public function updateNote($title, $content, $user_email, $journal_id, $image_files){
+            strlen($title) > 250 && header("Location: /note/$journal_id?error-msg=title-too-long");
+            strlen($content) > 500 && header("Location: /note/$journal_id?error-msg=content-too-long");
 
-        // get user id
-        $user_id_stmt = NoteServices::$conn->prepare("SELECT id FROM users WHERE username = ?");
-        $user_id_stmt->execute([$user_email]);
-        $user_id = $user_id_stmt->fetchColumn();
+            // filter images so that there is none empty being sent into the database
+            $image_files = array_filter($image_files);
 
-        // get all journals and reorder them by recent date
-        $get_journals_stmt = NoteServices::$conn->prepare("SELECT * FROM journals WHERE user_id = ? ORDER BY created_date DESC");
-        $get_journals_stmt->execute([$user_id]);
-        $journals = $get_journals_stmt->fetchAll();
-
-        // get the images for each journal
-        foreach($journals as &$journal){
-            $journal_id = $journal['id'];
-            $get_images_stmt = NoteServices::$conn->prepare("SELECT * FROM images WHERE journal_id = ?");
-            $get_images_stmt->execute([$journal_id]);
-            $images = $get_images_stmt->fetchAll();
-            $journal['images'] = $images;
-        }
-        
-        // Remove the reference to avoid any unintended side effects
-        unset($journal);
-        
-        return $journals;
-    }
-
-    public function getNoteById($id){
-        $stmt = NoteServices::$conn->prepare("SELECT * FROM journals WHERE id = ?");
-        $stmt->execute([$id]);
-        $journal = $stmt->fetch();
-
-        $images_stmt = NoteServices::$conn->prepare("SELECT * FROM images WHERE journal_id = ?");
-        $images_stmt->execute([$id]);
-        $images = $images_stmt->fetchAll();
-
-        $journal['images'] = $images;
-
-        return $journal;
-    }
-    public function createNote(){
-        $user_email = $_SESSION['user'];
-        $user_id = NoteServices::$user_services->getUserIdByEmail($user_email);
-        $stmt = NoteServices::$conn->prepare("INSERT INTO journals (user_id, created_date) VALUES (?, NOW())");
-        $stmt->execute([$user_id]);
-        $journal_id = NoteServices::$conn->lastInsertId();
-        
-        header("Location: /note/$journal_id");
-    }
-
-    public function addNote(){
-
+             foreach($image_files as $image_file){
+                 $image_data = base64_encode(file_get_contents($image_file));
+             }
        
+            // get user id
+            $user_id = NoteServices::$user_repositories->getUserIdByEmail($user_email);
+
+            // update journal in journals table
+            NoteServices::$note_repositories->updateNote($title, $content, $user_id, $journal_id);
+
+             // insert images into images table
+             foreach($image_files as $image_file){
+                // convert to long blob and store in database
+                NoteServices::$image_repositories->addImage($image_data, $journal_id);
+            }
+            
+            header("Location: /note/$journal_id");
     }
 
-    public function updateNote(){
-        
-
-    }
-
-    public function deleteNoteById($note_id){
-        // delete the note and all images associated with it
-        $delete_images_stmt = NoteServices::$conn->prepare("DELETE FROM images WHERE journal_id = ?");
-        $delete_images_stmt->execute([$note_id]);
-
-        $delete_note_stmt = NoteServices::$conn->prepare("DELETE FROM journals WHERE id = ?");
-        $delete_note_stmt->execute([$note_id]);
-       
-        
-        header("Location: /notes");
-        
-    }
+   
 
 }
+
+
 
 ?>

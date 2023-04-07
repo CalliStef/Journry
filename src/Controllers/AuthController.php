@@ -4,18 +4,21 @@ namespace Controllers;
 
 session_start();
 
-use \Controllers\DbController;
-use \Services\MailServices;
+use \Services\AuthServices;
+use \Repositories\UserRepositories;
 
 
 class AuthController
 {
 
-    private static $conn;
+    private static $user_repositories;
+    private static $auth_services;
+
 
     public function __construct()
     {
-        AuthController::$conn = DbController::get_connection();
+        AuthController::$user_repositories = new UserRepositories();
+        AuthController::$auth_services = new AuthServices();
     }
 
     public function registerUser()
@@ -26,9 +29,7 @@ class AuthController
         $password = $_POST['password'];
 
         // check for any duplicate usernames in the database
-        $stmt = AuthController::$conn->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $count = $stmt->fetchColumn();
+        $count = AuthController::$user_repositories->getUserByEmail($username);
 
         // if there is a duplicate...
         if ($count > 0) {
@@ -38,147 +39,30 @@ class AuthController
         }
 
         // if there is no duplicate...
-        $this->adduser($username, $password);
+        AuthController::$auth_services->addUser($username, $password);
     }
 
-    public function addUser($username, $password)
-    {
-
-        // session_start();
-        $_SESSION['user'] = $username;
-
-        // hash the password
-        $password = password_hash($password, PASSWORD_DEFAULT);
-
-        // generate activation token
-        $token = bin2hex(random_bytes(32));
-
-        // insert user credentials as well as the token into the database
-        $stmt = AuthController::$conn->prepare("INSERT INTO users(username, password, activation_token, created) VALUES(?, ?, ?, NOW())");
-        $stmt->execute([$username, $password, $token]);
-
-        // create the activation link
-        $activation_link = "http://$_SERVER[HTTP_HOST]/src/activate.php?token=$token";
-
-
-        // // send activation email
-        $subject = 'Activate your account';
-        $message = "
-        Thanks for signing up! 🥳🙌✨
-        Your account has been created, you can login by pressing the url below. 
-        -----------------
-        $activation_link
-        -----------------
-        ";
-
-        $mailServices = new MailServices();
-        $mailServices->sendMail($username, $subject, $message);
-
-
-        header("Location: /auth/login?notification=email-sent");
-        
-    }
+   
 
     public function loginUser()
     {
-
-        // // Check session for user login attempts
-        // session_start();
 
         // get the username and password from the form
         $username = filter_var($_POST['username'], FILTER_VALIDATE_EMAIL); // validate email format input
         $password = $_POST['password'];
 
         // check if the username exists in the database
-        $stmt = AuthController::$conn->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $count = $stmt->fetchColumn();
+        $user = AuthController::$user_repositories->getUserByEmail($username);
 
         // if user doesn't exist in the database, redirect to signup page
-        if ($count == 0) {
+        if ($user == 0) {
             header("Location: /auth/signup?notification=user-does-not-exist");
             exit;
         }
 
-        // check with database to see if the password is the same
-        $stmt = AuthController::$conn->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $user = $stmt->fetch();
-
-      
-        // check if the password is the same as the one in the database
-        if (password_verify($password, $user['password'])) {
-
-
-            // if the user has not activated their account, redirect to login page
-            if ($user['active'] == 0) {
-                header("Location: /auth/login?notification=activation");
-                exit;
-            }
-
-            $_SESSION['login_success'] = 1;
-            $_SESSION['user'] = $username;
-
-            // Update the user's last activity time in the session
-            $_SESSION['last_activity'] = time();
-
-            header("Location: /home");
-        } else {
-
-
-            // if the user has failed 3 times, redirect to login page
-            if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] >= 3) {
-                header("Location: /auth/login?notification=locked-out");
-                $this->forgotPassword();
-                exit;
-            }
-
-            // if the user has failed less than 3 times, increment the login_attempts
-            if (isset($_SESSION['login_attempts'])) {
-                $_SESSION['login_attempts']++;
-            } else {
-                $_SESSION['login_attempts'] = 1;
-            }
-
-            // if the user has failed less than 3 times, redirect to login page
-            $_SESSION['error'] = 'Wrong username or password';
-            header("Location: /auth/login?notification=wrong-input");
-        }
-    }
-
-    public function forgotPassword()
-    {
-
-        $username = $_SESSION['user'] ?? $_POST['username'];
-
-        // generate a new password
-        $new_password = bin2hex(random_bytes(32));
-
-        $hash_new_password = password_hash($new_password, PASSWORD_DEFAULT);
-
-        // save password to database
-        $stmt = AuthController::$conn->prepare("UPDATE users SET password = ? WHERE username = ?");
-        $stmt->execute([$hash_new_password, $username]);
-
-        // send email with a new password
-        $subject = 'New password';
-        $message = "
-            Here's a new password for your account to log in with. 🤗✨
-            -----------------
-            $new_password
-            -----------------
-
-            Click the link below to log in with your new password. 🚀
-            -----------------
-            http://$_SERVER[HTTP_HOST]/auth/login
-            -----------------
-        ";
-
-       
-        $mailServices = new MailServices();
-        $mailServices->sendMail($username, $subject, $message);
-       
-        header("Location: /auth/login?notification=password-reset");
+        // if user exists in the database, check if the password is correct
+        AuthController::$auth_services->verifyUserLogin($user, $password);
+        
     }
 
     public function logoutUser()

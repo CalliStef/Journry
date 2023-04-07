@@ -1,0 +1,1 @@
+live-url: https://journry.up.railway.app/auth/signup

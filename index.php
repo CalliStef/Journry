@@ -7,15 +7,17 @@ require_once './src/Controllers/DbController.php';
 require_once './src/Controllers/AuthController.php';
 require_once './src/Controllers/NoteController.php';
 
-require_once './src/Services/ImageServices.php';
-require_once './src/Services/noteServices.php';
+require_once './src/Repositories/ImageRepositories.php';
+require_once './src/Repositories/NoteRepositories.php';
 
 use \Controllers\DbController;
 use \Controllers\AuthController;
 use \Controllers\NoteController;
 
-use \Services\ImageServices;
-use \Services\NoteServices;
+use \Services\AuthServices;
+
+use \Repositories\ImageRepositories;
+use \Repositories\NoteRepositories;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
@@ -28,8 +30,10 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $authController = new AuthController();
     $noteController = new NoteController();
 
-    $imageServices = new ImageServices();
-    $noteServices = new NoteServices();
+    $authServices = new AuthServices();
+
+    $imageRepositories = new ImageRepositories();
+    $noteRepositories = new NoteRepositories();
 
     $middleware = function ($handler) {
         return function ($vars) use ($handler) {
@@ -61,7 +65,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->get('/auth/forgot-password', function () {
         include './src/Views/auths/forgot-password.view.php';
     });
-    $r->post('/auth/forgot-password', [$authController, 'forgotPassword']);
+    $r->post('/auth/forgot-password', [$authServices, 'forgotPassword']);
     $r->get('/auth/logout', [$authController, 'logoutUser']);
     // $r->get('/auth/activate', include './src/activate.php');
 
@@ -69,20 +73,20 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
         include './src/Views/home.view.php';
     }));
 
-    $r->get('/notes', $middleware(function () use ($noteServices) {
+    $r->get('/notes', $middleware(function () use ($noteRepositories) {
         $viewData = [
-            'notes' => $noteServices->getNotes(),
+            'notes' => $noteRepositories->getNotes(),
         ];
 
         include './src/Views/notes/notes.view.php';
     }));
-    $r->get('/note/create', $middleware(function() use ($noteServices) {
-       $noteServices->createNote();
+    $r->get('/note/create', $middleware(function() use ($noteRepositories) {
+       $noteRepositories->createNote();
     }));
 
-    $r->get('/note/{id:\d+}', $middleware(function ($id) use ($noteServices) {
+    $r->get('/note/{id:\d+}', $middleware(function ($id) use ($noteRepositories) {
         $viewData = [
-            'journalData' => $noteServices->getNoteById($id['id']),
+            'journalData' => $noteRepositories->getNoteById($id['id']),
         ];
 
         include './src/Views/notes/note.view.php';
@@ -90,15 +94,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->post('/note/update/{id:\d+}', $middleware(function ($id) use ($noteController) {
         $noteController->updateNote($id['id']);
     }));
-    $r->get('/note/delete/{id:\d+}', $middleware(function ($id) use ($noteServices) {
-        $noteServices->deleteNoteById($id['id']);
+    $r->get('/note/delete/{id:\d+}', $middleware(function ($id) use ($noteRepositories) {
+        $noteRepositories->deleteNoteById($id['id']);
     }));
-    $r->get('/image/add/{id:\d+}', $middleware(function ($id) use ($imageServices) { // param is a journal id
-        
-        $imageServices->addImage($_FILES['images'], $id['id']);
-    }));
-    $r->get('/image/delete/{id:\d+}', $middleware(function ($id) use ($imageServices) { // param is an image id
-        $imageServices->deleteImageById($id['id']);
+    $r->get('/image/delete/{id:\d+}', $middleware(function ($id) use ($imageRepositories) { // param is an image id
+        $imageRepositories->deleteImageById($id['id']);
     }));
 });
 
