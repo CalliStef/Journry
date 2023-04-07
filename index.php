@@ -1,14 +1,21 @@
 <?php
 
-require_once './config.php';
+include_once './config.php';
 
 require './vendor/autoload.php';
-require_once './src/Controllers/DbController.php';
-require_once './src/Controllers/AuthController.php';
-require_once './src/Controllers/NoteController.php';
 
-require_once './src/Repositories/ImageRepositories.php';
-require_once './src/Repositories/NoteRepositories.php';
+include_once './src/Repositories/ImageRepositories.php';
+include_once './src/Repositories/NoteRepositories.php';
+include_once './src/Repositories/UserRepositories.php';
+
+include_once './src/Services/AuthServices.php';
+include_once './src/Services/NoteServices.php';
+include_once './src/Services/MailServices.php';
+
+include_once './src/Controllers/DbController.php';
+include_once './src/Controllers/AuthController.php';
+include_once './src/Controllers/NoteController.php';
+
 
 use \Controllers\DbController;
 use \Controllers\AuthController;

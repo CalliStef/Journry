@@ -2,8 +2,6 @@
 
 namespace Controllers;
 
-require_once __DIR__ . '/src/Services/NoteServices.php';
-
 use Services\NoteServices;
 
 class NoteController{

@@ -2,8 +2,7 @@
 
 namespace Services;
 
-require_once __DIR__ . '/src/Repositories/UserRepositories.php';
-require_once 'MailServices.php';
+
 
 use Repositories\UserRepositories;
 use Services\MailServices;
