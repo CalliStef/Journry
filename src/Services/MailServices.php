@@ -18,7 +18,6 @@ class MailServices{
 
     public function sendMail($to, $subject, $message){
        
-
         try {
             $mail = new Mail();
             $mail->setFrom("callistastefanie@gmail.com");
@@ -33,6 +32,7 @@ class MailServices{
         } catch (\Exception $e) {
             echo 'Caught exception: '. $e->getMessage() ."\n";
         }
+        
     }
 
 }
