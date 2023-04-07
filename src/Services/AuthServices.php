@@ -3,7 +3,7 @@
 namespace Services;
 
 require_once '../Repositories/UserRepositories.php';
-require_once '../Services/MailServices.php';
+require_once 'MailServices.php';
 
 use Repositories\UserRepositories;
 use Services\MailServices;
