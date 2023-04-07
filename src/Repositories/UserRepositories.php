@@ -2,7 +2,7 @@
 namespace Repositories;
 
 
-use Controllers\DbController;
+use \Controllers\DbController;
 
 class UserRepositories {
 

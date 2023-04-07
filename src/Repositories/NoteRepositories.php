@@ -4,8 +4,8 @@ namespace Repositories;
 
 require_once 'UserRepositories.php';
 
-use Controllers\DbController;
-use Repositories\UserRepositories;
+use \Controllers\DbController;
+use \Repositories\UserRepositories;
 
 class NoteRepositories {
 

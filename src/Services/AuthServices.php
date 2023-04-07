@@ -21,7 +21,7 @@ class AuthServices{
     public function addUser($username, $password)
     {
 
-        // session_start();
+        session_start();
         $_SESSION['user'] = $username;
 
         // hash the password
@@ -57,8 +57,7 @@ class AuthServices{
 
     public function verifyUserLogin($user, $password){
 
-        echo "user: $user";
-        echo "password: $password";
+    
 
         // check if the password is the same as the one in the database
         if (password_verify($password, $user['password'])) {

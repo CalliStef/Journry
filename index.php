@@ -9,7 +9,7 @@ include_once './src/Repositories/NoteRepositories.php';
 include_once './src/Repositories/UserRepositories.php';
 
 include_once './src/Services/AuthServices.php';
-include_once './src/Services/NoteServices.php';
+include_once './src/Services/noteServices.php';
 include_once './src/Services/MailServices.php';
 
 include_once './src/Controllers/DbController.php';

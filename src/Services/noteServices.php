@@ -4,9 +4,9 @@ namespace Services;
 
 
 
-use Repositories\UserRepositories;
-use Repositories\NoteRepositories;
-use Repositories\ImageRepositories;
+use \Repositories\UserRepositories;
+use \Repositories\NoteRepositories;
+use \Repositories\ImageRepositories;
 
 
 class NoteServices{
