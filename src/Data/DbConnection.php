@@ -2,9 +2,9 @@
 
 // Database controller
 
-namespace Controllers;
+namespace Data;
 
-class DbController{
+class DbConnection{
     private static $db_connection;
 
     public function __construct(){
@@ -15,8 +15,8 @@ class DbController{
     {
 
         try {
-            DbController::$db_connection = new \PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass);
-            return DbController::$db_connection;
+            DbConnection::$db_connection = new \PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass);
+            return DbConnection::$db_connection;
         } catch(\PDOException $e) {
             die("Connection failed: " . $e->getMessage());
         }
@@ -24,7 +24,7 @@ class DbController{
     }
 
     public static function get_connection(){
-        return DbController::$db_connection;
+        return DbConnection::$db_connection;
     }
 
    

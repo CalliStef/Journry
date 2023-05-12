@@ -9,31 +9,29 @@ include_once './src/Repositories/NoteRepositories.php';
 include_once './src/Repositories/UserRepositories.php';
 
 include_once './src/Services/AuthServices.php';
-include_once './src/Services/noteServices.php';
+include_once './src/Services/NoteServices.php';
 include_once './src/Services/MailServices.php';
 
-include_once './src/Controllers/DbController.php';
+include_once './src/Data/DbConnection.php';
 include_once './src/Controllers/AuthController.php';
 include_once './src/Controllers/NoteController.php';
 
 
-use \Controllers\DbController;
-use \Controllers\AuthController;
-use \Controllers\NoteController;
-
-use \Services\AuthServices;
-
-use \Repositories\ImageRepositories;
-use \Repositories\NoteRepositories;
+use Controllers\AuthController;
+use Controllers\NoteController;
+use Data\DbConnection;
+use Repositories\ImageRepositories;
+use Repositories\NoteRepositories;
+use Services\AuthServices;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
-DbController::create_connection($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASS"], $_ENV["DB_PORT"]);
+DbConnection::create_connection($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASS"], $_ENV["DB_PORT"]);
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
 
-    $dbController = new DbController();
+    $dbContext = new DbConnection();
     $authController = new AuthController();
     $noteController = new NoteController();
 

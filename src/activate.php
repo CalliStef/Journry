@@ -1,8 +1,8 @@
 <?php 
 
-require_once('./Controllers/DbController.php');
+require_once('./Data/DbConnection.php');
 
-use \Controllers\DbController;
+use Data\DbConnection;
 
 // get dotenv
 require_once '../vendor/autoload.php';
@@ -10,7 +10,7 @@ require_once '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->safeLoad();
 
-$conn = DbController::create_connection($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASS"], $_ENV["DB_PORT"]);
+$conn = DbConnection::create_connection($_ENV["DB_HOST"], $_ENV["DB_NAME"], $_ENV["DB_USER"], $_ENV["DB_PASS"], $_ENV["DB_PORT"]);
 
 // get the activation token from the URL
 $token = $_GET['token'];

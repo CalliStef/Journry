@@ -2,14 +2,14 @@
 namespace Repositories;
 
 
-use \Controllers\DbController;
+use Data\DbConnection;
 
 class UserRepositories {
 
     private static $conn;
 
     public function __construct(){
-        UserRepositories::$conn = DbController::get_connection();
+        UserRepositories::$conn = DbConnection::get_connection();
     }
 
     public function getUserById($id){

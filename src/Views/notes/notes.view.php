@@ -43,7 +43,7 @@
             $month = $full_date_arr[1];
             $year = $full_date_arr[0];
 
-            $day_ordinal = match ($day % 10) {
+            $day_ordinal = match ((int)$day % 10) {
                 1 => 'st',
                 2 => 'nd',
                 3 => 'rd',

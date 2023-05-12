@@ -49,3 +49,7 @@ valet link
 
 ### 5.1 Not using valet
 - Map your server to host the root folder.
+- Run the app using a built-in server
+```bash
+php -S localhost:8000
+```

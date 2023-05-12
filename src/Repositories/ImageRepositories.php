@@ -3,14 +3,14 @@
 namespace Repositories;
 
 
-use \Controllers\DbController;
+use Data\DbConnection;
 
 class ImageRepositories{
 
     private static $conn;
 
     public function __construct(){
-        ImageRepositories::$conn = DbController::get_connection();
+        ImageRepositories::$conn = DbConnection::get_connection();
     }
 
     public function addImage($image_data, $journal_id){

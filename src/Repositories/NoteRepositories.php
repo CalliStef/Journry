@@ -4,8 +4,7 @@ namespace Repositories;
 
 require_once 'UserRepositories.php';
 
-use \Controllers\DbController;
-use \Repositories\UserRepositories;
+use Data\DbConnection;
 
 class NoteRepositories {
 
@@ -13,7 +12,7 @@ class NoteRepositories {
     private static $user_repositories;
 
     public function __construct(){ 
-        NoteRepositories::$conn = DbController::get_connection();
+        NoteRepositories::$conn = DbConnection::get_connection();
         NoteRepositories::$user_repositories = new UserRepositories();
     }
 
